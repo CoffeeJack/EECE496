@@ -1,4 +1,8 @@
 package edu.mit.media.funf.wifiscanner;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
+import edu.mit.media.funf.configured.FunfConfig;
 import edu.mit.media.funf.probe.builtin.LocationProbe;
 import edu.mit.media.funf.probe.builtin.WifiProbe;
 
@@ -40,19 +45,41 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main);
         
         final Context context = this;
-        
+                
+        //Checkbox to enable/disable WiFi
         CheckBox enabledCheckbox = (CheckBox)findViewById(R.id.enabledCheckbox); 
         enabledCheckbox.setChecked(MainPipeline.isEnabled(context));
         enabledCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        Intent archiveIntent = new Intent(context, MainPipeline.class);
-                        String action = isChecked ? MainPipeline.ACTION_ENABLE : MainPipeline.ACTION_DISABLE;
-                        archiveIntent.setAction(action);
-                        startService(archiveIntent);
+//                        Intent archiveIntent = new Intent(context, MainPipeline.class);
+//                        String action = isChecked ? MainPipeline.ACTION_ENABLE : MainPipeline.ACTION_DISABLE;
+//                        archiveIntent.setAction(action);
+//                        startService(archiveIntent);
+                	SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+                	FunfConfig config  = FunfConfig.getInstance((prefs));
+                	Map<String, Bundle[]> dataRequest = config.getDataRequests();
+                	
+                	List<Bundle> tempList = new ArrayList<Bundle>();
+                	tempList.add(new Bundle()); //you can add some parameters in the Bundle (e.g., PERIOD, DURATION). Now is default
+
+                	Bundle arrBundle[] = tempList.toArray(new Bundle[tempList.size()]);
+                	
+                	String action = isChecked ? "Checked" : "Not Checked";
+                	
+                	//Log.i("Debug",action);
+                	
+                	if(action=="Checked"){
+                		dataRequest.put("edu.mit.media.funf.probe.builtin.LocationProbe", arrBundle);
+                		config.edit().setDataRequests(dataRequest).commit();
+                	}else{
+                		dataRequest.remove("edu.mit.media.funf.probe.builtin.LocationProbe");
+                		config.edit().setDataRequests(dataRequest).commit();
+                	}
                 }
         });
         
+        //Button to archive data
         Button archiveButton = (Button)findViewById(R.id.archiveButton);
         archiveButton.setOnClickListener(new OnClickListener() {
                 @Override
@@ -63,19 +90,35 @@ public class MainActivity extends Activity {
                 }
         });
         
+        //Button to scan data
         Button scanNowButton = (Button)findViewById(R.id.scanNowButton);
         scanNowButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                         Intent runOnceIntent = new Intent(context, MainPipeline.class);
                         runOnceIntent.setAction(MainPipeline.ACTION_RUN_ONCE);
-                        runOnceIntent.putExtra(MainPipeline.RUN_ONCE_PROBE_NAME, WifiProbe.class.getName());
-                        startService(runOnceIntent);
+                        //runOnceIntent.putExtra(MainPipeline.RUN_ONCE_PROBE_NAME, WifiProbe.class.getName());
+                        //startService(runOnceIntent);
                         runOnceIntent.putExtra(MainPipeline.RUN_ONCE_PROBE_NAME, LocationProbe.class.getName());
                         startService(runOnceIntent);
                 }
         });
-
+        
+        //Get current config
+        Button getConfigButton = (Button)findViewById(R.id.getConfigButton);
+        getConfigButton.setOnClickListener(new OnClickListener(){
+        	@Override
+            public void onClick(View v) {
+        		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+        		FunfConfig config  = FunfConfig.getInstance(prefs);
+        		Map<String, Bundle[]> dataRequest = config.getDataRequests();
+        		
+        		Log.i("Debug",dataRequest.toString());
+//        		String key = "edu.mit.media.funf.probe.builtin.WifiProbe";
+//        		if(dataRequest.containsKey(key))Log.i("Debug","Found");
+//        		else Log.i("Debug","Not Found");
+        	}
+        });
 	}
 	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

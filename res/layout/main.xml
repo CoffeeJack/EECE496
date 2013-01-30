@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-         android:orientation="vertical"
-         android:layout_width="fill_parent"
-         android:layout_height="fill_parent">
+android:orientation="vertical"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent">
+
     <TextView android:text="Wifi Scanner periodically scans your location and surrounding wifi access points, and saves that information." 
-                    android:layout_width="wrap_content" 
-                    android:layout_height="wrap_content"/>
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"/>
+    
     <LinearLayout android:layout_width="fill_parent" 
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    
          <TextView android:text="Enabled" 
-                 android:layout_width="wrap_content" 
-                 android:layout_height="wrap_content"/>
-             <CheckBox android:id="@+id/enabledCheckbox" 
-                     android:layout_width="wrap_content" 
-                 android:layout_height="wrap_content"/>
+         android:layout_width="wrap_content" 
+         android:layout_height="wrap_content"/>
+         
+         <CheckBox android:id="@+id/enabledCheckbox" 
+         android:layout_width="wrap_content" 
+         android:layout_height="wrap_content"/>
+         
      </LinearLayout>
      
         <Button android:id="@+id/archiveButton"
@@ -30,4 +35,25 @@
                 android:text="Scan Now" 
             android:layout_width="fill_parent" 
             android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/getConfigButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Get Config" />
+
+    <LinearLayout android:layout_width="fill_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wifi Probe Enable" />
+
+        <CheckBox
+            android:id="@+id/enableCheck_wifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+ 	</LinearLayout>
 </LinearLayout>

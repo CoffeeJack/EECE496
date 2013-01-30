@@ -79,6 +79,8 @@ public class MainPipeline extends ConfiguredPipeline {
 	public void onDataReceived(Bundle data) {
 		super.onDataReceived(data);
 		// Fill this in with extra behaviors on data received
+		Log.i("Debug","Data Received");
+		
 		incrementCount();
 	}
 	
@@ -86,12 +88,14 @@ public class MainPipeline extends ConfiguredPipeline {
 	public void onStatusReceived(Probe.Status status) {
 		super.onStatusReceived(status);
 		// Fill this in with extra behaviors on status received
+		Log.i("Debug","Status Received");
 	}
 	
 	@Override
 	public void onDetailsReceived(Probe.Details details) {
 		super.onDetailsReceived(details);
 		// Fill this in with extra behaviors on details received
+		Log.i("Debug","Detail Received");
 	}
 	
 	public static boolean isEnabled(Context context) {
