@@ -56,6 +56,8 @@ public class MainActivity extends Activity {
 //                        String action = isChecked ? MainPipeline.ACTION_ENABLE : MainPipeline.ACTION_DISABLE;
 //                        archiveIntent.setAction(action);
 //                        startService(archiveIntent);
+                	Intent intent = new Intent(context, MainPipeline.class);
+                	
                 	SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
                 	FunfConfig config  = FunfConfig.getInstance((prefs));
                 	Map<String, Bundle[]> dataRequest = config.getDataRequests();
@@ -66,6 +68,8 @@ public class MainActivity extends Activity {
                 	Bundle arrBundle[] = tempList.toArray(new Bundle[tempList.size()]);
                 	
                 	String action = isChecked ? "Checked" : "Not Checked";
+                	
+                	//Log.i("Debug",intent.getExtras().toString());
                 	
                 	//Log.i("Debug",action);
                 	
@@ -109,14 +113,9 @@ public class MainActivity extends Activity {
         getConfigButton.setOnClickListener(new OnClickListener(){
         	@Override
             public void onClick(View v) {
-        		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
-        		FunfConfig config  = FunfConfig.getInstance(prefs);
-        		Map<String, Bundle[]> dataRequest = config.getDataRequests();
         		
-        		Log.i("Debug",dataRequest.toString());
-//        		String key = "edu.mit.media.funf.probe.builtin.WifiProbe";
-//        		if(dataRequest.containsKey(key))Log.i("Debug","Found");
-//        		else Log.i("Debug","Not Found");
+        		Intent intent = new Intent(getBaseContext(),SettingsActivity.class);
+        		startActivity(intent);
         	}
         });
 	}
