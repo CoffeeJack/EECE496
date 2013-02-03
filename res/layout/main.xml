@@ -11,14 +11,6 @@ android:layout_height="fill_parent">
     <LinearLayout android:layout_width="fill_parent" 
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
-    
-         <TextView android:text="Enabled" 
-         android:layout_width="wrap_content" 
-         android:layout_height="wrap_content"/>
-         
-         <CheckBox android:id="@+id/enabledCheckbox" 
-         android:layout_width="wrap_content" 
-         android:layout_height="wrap_content"/>
          
      </LinearLayout>
      
@@ -46,14 +38,5 @@ android:layout_height="fill_parent">
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
         
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Wifi Probe Enable" />
-
-        <CheckBox
-            android:id="@+id/enableCheck_wifi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
  	</LinearLayout>
 </LinearLayout>

@@ -27,5 +27,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    
+    <string-array name="probes">
+        <item>LocationProbe</item>
+        <item>WifiProbe</item>
+        <item>BluetoothProbe</item>
+    </string-array>
 
 </resources>

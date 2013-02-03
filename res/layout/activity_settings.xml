@@ -1,15 +1,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res/edu.mit.media.funf.wifiscanner"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".SettingsActivity" >
+
+    <Button
+        android:id="@+id/listProbeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="List Probes" />
 
     <LinearLayout
         android:id="@+id/settingsContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="169dp"
         android:orientation="vertical" >
-
     </LinearLayout>
+
 
 </LinearLayout>

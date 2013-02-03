@@ -37,51 +37,11 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// TODO Auto-generated method stub
-		
-        //MainPipeline.getSystemPrefs(this).registerOnSharedPreferenceChangeListener(this);
-        //updateScanCount();
+		// TODO Auto-generated method stub	
 		
 		setContentView(R.layout.main);
         
         final Context context = this;
-                
-        //Checkbox to enable/disable WiFi
-        CheckBox enabledCheckbox = (CheckBox)findViewById(R.id.enabledCheckbox); 
-        enabledCheckbox.setChecked(MainPipeline.isEnabled(context));
-        enabledCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                        Intent archiveIntent = new Intent(context, MainPipeline.class);
-//                        String action = isChecked ? MainPipeline.ACTION_ENABLE : MainPipeline.ACTION_DISABLE;
-//                        archiveIntent.setAction(action);
-//                        startService(archiveIntent);
-                	Intent intent = new Intent(context, MainPipeline.class);
-                	
-                	SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
-                	FunfConfig config  = FunfConfig.getInstance((prefs));
-                	Map<String, Bundle[]> dataRequest = config.getDataRequests();
-                	
-                	List<Bundle> tempList = new ArrayList<Bundle>();
-                	tempList.add(new Bundle()); //you can add some parameters in the Bundle (e.g., PERIOD, DURATION). Now is default
-
-                	Bundle arrBundle[] = tempList.toArray(new Bundle[tempList.size()]);
-                	
-                	String action = isChecked ? "Checked" : "Not Checked";
-                	
-                	//Log.i("Debug",intent.getExtras().toString());
-                	
-                	//Log.i("Debug",action);
-                	
-                	if(action=="Checked"){
-                		dataRequest.put("edu.mit.media.funf.probe.builtin.LocationProbe", arrBundle);
-                		config.edit().setDataRequests(dataRequest).commit();
-                	}else{
-                		dataRequest.remove("edu.mit.media.funf.probe.builtin.LocationProbe");
-                		config.edit().setDataRequests(dataRequest).commit();
-                	}
-                }
-        });
         
         //Button to archive data
         Button archiveButton = (Button)findViewById(R.id.archiveButton);
@@ -107,6 +67,7 @@ public class MainActivity extends Activity {
                         startService(runOnceIntent);
                 }
         });
+
         
         //Get current config
         Button getConfigButton = (Button)findViewById(R.id.getConfigButton);
@@ -118,10 +79,12 @@ public class MainActivity extends Activity {
         		startActivity(intent);
         	}
         });
+
 	}
 	
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-	        Log.i("WifiScanner", "SharedPref change: " + key);
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {	    
+		
+		Log.i("WifiScanner", "SharedPref change: " + key);
 	        if (MainPipeline.SCAN_COUNT_KEY.equals(key)) {
 	                updateScanCount();
 	        }
@@ -142,7 +105,8 @@ public class MainActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 		// TODO Auto-generated method stub
-
+		
+		Log.i("Main","Start");
 	}
 
 	/* (non-Javadoc)
@@ -152,6 +116,9 @@ public class MainActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 		// TODO Auto-generated method stub
+		
+		Log.i("Main","Resume");
+		updateScanCount();
 
 	}
 
@@ -162,6 +129,8 @@ public class MainActivity extends Activity {
 	public void onPause() {
 		super.onPause();
 		// TODO Auto-generated method stub
+		
+		Log.i("Main","Pause");
 
 	}
 
@@ -172,6 +141,8 @@ public class MainActivity extends Activity {
 	public void onStop() {
 		super.onStop();
 		// TODO Auto-generated method stub
+		
+		Log.i("Main","Stop");
 
 	}
 
@@ -182,6 +153,8 @@ public class MainActivity extends Activity {
 	public void onDestroy() {
 		super.onDestroy();
 		// TODO Auto-generated method stub
+		
+		Log.i("Main","Destroy");
 
 	}
 	
