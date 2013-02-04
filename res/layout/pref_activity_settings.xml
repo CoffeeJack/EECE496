@@ -1,9 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:picker="com.michaelnovakjr.numberpicker"
+    android:key="AllProbes"
     android:title="Preferences">
+
     <PreferenceCategory
-        android:key="Probes" 
-        android:title="Probes">
+        android:title="Location Probe"
+        android:key="container_LocationProbe">
+        
+        <com.michaelnovakjr.numberpicker.NumberPickerPreference
+            android:key="period_LocationProbe"
+            android:title="Period"
+            android:summary="Sampling period in minutes"
+            picker:defaultValue="0"
+            picker:startRange="0"
+            picker:endRange="60" 
+        />
+        
+        <com.michaelnovakjr.numberpicker.NumberPickerPreference
+            android:key="duration_LocationProbe"
+            android:title="Duration"
+            android:summary="Duration of each sample in seconds"
+            picker:defaultValue="0"
+            picker:startRange="0"
+            picker:endRange="60" 
+        />
         
     </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:title="Wifi Probe"
+        android:key="container_WifiProbe">
+        
+        <com.michaelnovakjr.numberpicker.NumberPickerPreference
+            android:key="period_WifiProbe"
+            android:title="Period"
+            android:summary="Sampling period in minutes"
+            picker:defaultValue="0"
+            picker:startRange="0"
+            picker:endRange="60" 
+        />
+        
+        <com.michaelnovakjr.numberpicker.NumberPickerPreference
+            android:key="duration_WifiProbe"
+            android:title="Duration"
+            android:summary="Duration of each sample in seconds"
+            picker:defaultValue="0"
+            picker:startRange="0"
+            picker:endRange="60" 
+        />
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:title="Bluetooth Probe"
+        android:key="container_BluetoothProbe">
+        
+        <com.michaelnovakjr.numberpicker.NumberPickerPreference
+            android:key="period_BluetoothProbe"
+            android:title="Period"
+            android:summary="Sampling period in minutes"
+            picker:defaultValue="0"
+            picker:startRange="0"
+            picker:endRange="60" 
+        />
+        
+        <com.michaelnovakjr.numberpicker.NumberPickerPreference
+            android:key="duration_BluetoothProbe"
+            android:title="Duration"
+            android:summary="Duration of each sample in seconds"
+            picker:defaultValue="0"
+            picker:startRange="0"
+            picker:endRange="60" 
+        />
+        
+    </PreferenceCategory>
+    
 </PreferenceScreen>

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.michaelnovakjr.numberpicker.NumberPickerPreference;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +16,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -36,48 +39,69 @@ public class SettingsActivity extends PreferenceActivity {
 
 		addPreferencesFromResource(R.layout.pref_activity_settings);
 		
-		PreferenceCategory pc = (PreferenceCategory)findPreference("Probes");
-		
 		Resources resources = getResources();
 		String[] probe_list = resources.getStringArray(R.array.probes);
-
+		
 		for(int count = 0; count < probe_list.length; count++){
 
+	        //setup checkbox
+			PreferenceCategory pc = (PreferenceCategory)findPreference("container_"+probe_list[count]);
 			CheckBoxPreference cb = new CheckBoxPreference(this);
-	        
-			//fill in each checkbox
-			cb.setKey(probe_list[count]);
-	        cb.setTitle(probe_list[count]);
+			cb.setKey("checkbox_"+probe_list[count]);			
 			cb.setChecked(MainPipeline.isEnabled(getApplicationContext()));
-	        cb.setOnPreferenceChangeListener(this.probeCheckBoxListner);
-			
+	        cb.setOnPreferenceChangeListener(this.probeCheckBoxListener);
+	        cb.setTitle("Enable/Disable");
 	        pc.addPreference(cb);
+
+	        //setup period
+	        NumberPickerPreference period_npp = (NumberPickerPreference)findPreference("period_"+probe_list[count]);
+	        period_npp.setOnPreferenceChangeListener(this.probePeriodListener);
+	        
+	        //setup duration
+	        NumberPickerPreference duration_npp = (NumberPickerPreference)findPreference("duration_"+probe_list[count]);
+	        duration_npp.setOnPreferenceChangeListener(this.probeDurationListener);
 		}
-		
-		//NumberPicker np = new NumberPicker(this);
-		//container.addView(np);
-		
-		//NumberPicker np = (NumberPicker)findViewById(R.id.numPicker);
-		//np.setCurrent(99);
-		//np.setMinValue(0);
-		//np.setMaxValue(10);
 		
 	}
 	
-	Preference.OnPreferenceChangeListener probeCheckBoxListner = new Preference.OnPreferenceChangeListener() {
+	Preference.OnPreferenceChangeListener probeCheckBoxListener = new Preference.OnPreferenceChangeListener() {
 
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object isChecked) {
 			// TODO Auto-generated method stub
 			//Log.i("Debug",preference.getKey());
+			String arg = preference.getKey().replace("checkbox_", "");
 			
-			if(Boolean.parseBoolean(isChecked.toString())) enableProbe(preference.getKey());
-			else disableProbe(preference.getKey());
+			if(Boolean.parseBoolean(isChecked.toString())) enableProbe(arg);
+			else disableProbe(arg);
 			
 			return true;
 		} 
 	};
 	
+	Preference.OnPreferenceChangeListener probePeriodListener = new Preference.OnPreferenceChangeListener() {
+
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object period) {
+			// TODO Auto-generated method stub
+			Log.i("Debug",preference.getKey());
+			Log.i("Debug",period.toString());
+			
+			return true;
+		} 
+	};
+	
+	Preference.OnPreferenceChangeListener probeDurationListener = new Preference.OnPreferenceChangeListener() {
+
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object duration) {
+			// TODO Auto-generated method stub
+			Log.i("Debug",preference.getKey());
+			Log.i("Debug",duration.toString());
+			
+			return true;
+		} 
+	};
 	
 	public void enableProbe(String probe){
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);

@@ -94,7 +94,10 @@ public class MainActivity extends Activity {
 	    	FunfConfig config  = FunfConfig.getInstance((prefs));
 	    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
 	    	
-	    	Log.i("Debug",dataRequest.toString());	
+	    	//Bundle[] params = dataRequest.get(SettingsActivity.probe_prefix+"LocationProbe");
+	    	
+	    	//Log.i("Debug",Integer.toString(params.length));
+	    	Log.i("Debug",dataRequest.toString());
 	    	
 	    	//Intent intent = new Intent(getBaseContext(),PrefActivity.class);
 	    	//startActivity(intent);

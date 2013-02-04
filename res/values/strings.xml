@@ -33,5 +33,9 @@
         <item>WifiProbe</item>
         <item>BluetoothProbe</item>
     </string-array>
+    
+    <string name="dialog_set_number">Set</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_picker_title">Choose a number</string>
 
 </resources>
