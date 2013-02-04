@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- periods are in seconds -->
+    <integer-array name="default_periods">
+        <item>1800</item> <!-- LocationProbe -->
+        <item>1200</item> <!-- WifiProbe -->
+        <item>300</item> <!-- BluetoothProbe -->
+    </integer-array>
+    
+    <integer-array name="default_durations">
+    	<item>120</item> <!-- LocationProbe -->
+        <item>0</item> <!-- WifiProbe -->
+        <item>0</item> <!-- BluetoothProbe -->
+    </integer-array>
+</resources>

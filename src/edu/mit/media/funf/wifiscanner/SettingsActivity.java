@@ -1,6 +1,8 @@
 package edu.mit.media.funf.wifiscanner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +29,8 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import edu.mit.media.funf.configured.FunfConfig;
+import edu.mit.media.funf.probe.Probe;
+import edu.mit.media.funf.probe.builtin.LocationProbe;
 
 public class SettingsActivity extends PreferenceActivity {
 
@@ -103,7 +107,8 @@ public class SettingsActivity extends PreferenceActivity {
 		} 
 	};
 	
-	public void enableProbe(String probe){
+	public void setPeriod(String probe, Integer period){
+		
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
     	FunfConfig config  = FunfConfig.getInstance((prefs));
     	Map<String, Bundle[]> dataRequest = config.getDataRequests();
@@ -117,13 +122,43 @@ public class SettingsActivity extends PreferenceActivity {
 		config.edit().setDataRequests(dataRequest).commit();
 	}
 	
-	public void disableProbe(String probe){
+	public void enableProbe(String probe){
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
     	FunfConfig config  = FunfConfig.getInstance((prefs));
     	Map<String, Bundle[]> dataRequest = config.getDataRequests();
     	
+    	Resources resources = getResources();
+    	String[] probes = resources.getStringArray(R.array.probes);
+    	int[] default_periods = resources.getIntArray(R.array.default_periods);
+    	int[] default_durations = resources.getIntArray(R.array.default_durations);
+
+    	//Log.i("Debug",Arrays.asList(probes).toString());
+    	//Log.i("Debug",Integer.valueOf(Arrays.asList(probes).indexOf(probe)).toString());
+    
     	List<Bundle> tempList = new ArrayList<Bundle>();
-    	tempList.add(new Bundle());
+
+    	Bundle params = new Bundle();
+    	params.putInt("PERIOD", default_periods[Arrays.asList(probes).indexOf(probe)]); //default value
+    	if(default_durations[Arrays.asList(probes).indexOf(probe)]>0)
+    		params.putInt("DURATION", default_durations[Arrays.asList(probes).indexOf(probe)]);
+    	//Log.i("Debug",period.toString());
+    	
+    	tempList.add(params);
+    	
+    	Bundle arrBundle[] = tempList.toArray(new Bundle[tempList.size()]);
+    	
+    	dataRequest.put(this.probe_prefix+probe, arrBundle);
+    	
+
+    	
+		config.edit().setDataRequests(dataRequest).commit();
+		
+	}
+	
+	public void disableProbe(String probe){
+		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+    	FunfConfig config  = FunfConfig.getInstance((prefs));
+    	Map<String, Bundle[]> dataRequest = config.getDataRequests();   	
     	
     	dataRequest.remove(this.probe_prefix+probe);
 		config.edit().setDataRequests(dataRequest).commit();
@@ -158,7 +193,7 @@ public class SettingsActivity extends PreferenceActivity {
 	@Override
 	public void onStop(){
 		super.onStop();
-		Log.i("Debug","stop");
+		//Log.i("Debug","stop");
 		
 //		SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
 //	    SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -179,7 +214,7 @@ public class SettingsActivity extends PreferenceActivity {
 	@Override
 	public void onStart(){
 		super.onStart();
-		Log.i("Debug","start");
+		//Log.i("Debug","start");
 		
 //		SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
 //		

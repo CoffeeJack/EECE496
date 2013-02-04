@@ -1,5 +1,5 @@
 {       
-        "name": "WifiScanner",
+    "name": "WifiScanner",
     "version":1,
     "dataArchivePeriod":3600,
     "dataRequests":{

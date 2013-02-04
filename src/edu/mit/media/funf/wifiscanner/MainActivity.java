@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -41,6 +42,10 @@ public class MainActivity extends Activity {
 		
 		setContentView(R.layout.main);
         
+		Intent archiveIntent = new Intent(getBaseContext(), MainPipeline.class);
+        archiveIntent.setAction(MainPipeline.ACTION_ENABLE);
+        startService(archiveIntent);
+		
         final Context context = this;
         
         //Button to archive data
@@ -94,13 +99,21 @@ public class MainActivity extends Activity {
 	    	FunfConfig config  = FunfConfig.getInstance((prefs));
 	    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
 	    	
-	    	//Bundle[] params = dataRequest.get(SettingsActivity.probe_prefix+"LocationProbe");
+			Resources resources = getResources();
+			String[] probe_list = resources.getStringArray(R.array.probes);
+			
+			if(dataRequest.size()==0) Log.i("Debug","All probes are OFF");
+			
+			for(int i = 0; i < probe_list.length;i++){
+				if(dataRequest.containsKey(SettingsActivity.probe_prefix+probe_list[i])){
+					Bundle[] params = dataRequest.get(SettingsActivity.probe_prefix+probe_list[i]);
+					
+					for(Bundle param_set : params){
+						Log.i("Debug",probe_list[i]+" "+param_set.toString());
+					}
+				}
+			}
 	    	
-	    	//Log.i("Debug",Integer.toString(params.length));
-	    	Log.i("Debug",dataRequest.toString());
-	    	
-	    	//Intent intent = new Intent(getBaseContext(),PrefActivity.class);
-	    	//startActivity(intent);
 		}
 		
 	};
