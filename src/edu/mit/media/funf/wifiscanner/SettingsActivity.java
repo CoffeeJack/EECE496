@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -91,6 +92,9 @@ public class SettingsActivity extends PreferenceActivity {
 			Log.i("Debug",preference.getKey());
 			Log.i("Debug",period.toString());
 			
+			String probe = preference.getKey().replace("period_","");
+			setPeriod(probe,(Integer) period);
+			
 			return true;
 		} 
 	};
@@ -103,6 +107,9 @@ public class SettingsActivity extends PreferenceActivity {
 			Log.i("Debug",preference.getKey());
 			Log.i("Debug",duration.toString());
 			
+			String probe = preference.getKey().replace("duration_","");
+			setDuration(probe,(Integer) duration);
+			
 			return true;
 		} 
 	};
@@ -113,13 +120,38 @@ public class SettingsActivity extends PreferenceActivity {
     	FunfConfig config  = FunfConfig.getInstance((prefs));
     	Map<String, Bundle[]> dataRequest = config.getDataRequests();
     	
-    	List<Bundle> tempList = new ArrayList<Bundle>();
-    	tempList.add(new Bundle());
+    	if(dataRequest.containsKey(this.probe_prefix+probe)){
+			Bundle[] params = dataRequest.get(this.probe_prefix+probe);
+			
+			for(Bundle param_set : params){
+				if(param_set.containsKey("PERIOD")){
+					param_set.remove("PERIOD");
+					param_set.putInt("PERIOD", period);
+				}
+			}
+		}
     	
-    	Bundle arrBundle[] = tempList.toArray(new Bundle[tempList.size()]);
+    	config.edit().setDataRequests(dataRequest).commit();
+	}
+	
+	public void setDuration(String probe, Integer duration){
+		
+		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+    	FunfConfig config  = FunfConfig.getInstance((prefs));
+    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
     	
-    	dataRequest.put(this.probe_prefix+probe, arrBundle);
-		config.edit().setDataRequests(dataRequest).commit();
+    	if(dataRequest.containsKey(this.probe_prefix+probe)){
+			Bundle[] params = dataRequest.get(this.probe_prefix+probe);
+			
+			for(Bundle param_set : params){
+				if(param_set.containsKey("DURATION")){
+					param_set.remove("DURATION");
+					param_set.putInt("DURATION", duration);
+				}
+			}
+		}
+    	
+    	config.edit().setDataRequests(dataRequest).commit();
 	}
 	
 	public void enableProbe(String probe){
@@ -148,9 +180,7 @@ public class SettingsActivity extends PreferenceActivity {
     	Bundle arrBundle[] = tempList.toArray(new Bundle[tempList.size()]);
     	
     	dataRequest.put(this.probe_prefix+probe, arrBundle);
-    	
 
-    	
 		config.edit().setDataRequests(dataRequest).commit();
 		
 	}
