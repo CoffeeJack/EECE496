@@ -79,8 +79,28 @@ public class MainActivity extends Activity {
         		startActivity(intent);
         	}
         });
+        
+		Button listProbeButton = (Button)findViewById(R.id.listProbeButton);
+		listProbeButton.setOnClickListener(listProbes);
 
 	}
+	
+	OnClickListener listProbes = new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+	    	FunfConfig config  = FunfConfig.getInstance((prefs));
+	    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
+	    	
+	    	Log.i("Debug",dataRequest.toString());	
+	    	
+	    	//Intent intent = new Intent(getBaseContext(),PrefActivity.class);
+	    	//startActivity(intent);
+		}
+		
+	};
 	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {	    
 		

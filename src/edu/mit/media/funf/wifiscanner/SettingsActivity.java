@@ -10,6 +10,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -21,7 +25,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import edu.mit.media.funf.configured.FunfConfig;
 
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends PreferenceActivity {
 
 	final static String probe_prefix = "edu.mit.media.funf.probe.builtin.";
 	final Context context = this;
@@ -29,26 +33,25 @@ public class SettingsActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_settings);
+
+		addPreferencesFromResource(R.layout.pref_activity_settings);
 		
-		LinearLayout container = (LinearLayout)findViewById(R.id.settingsContainer);
+		PreferenceCategory pc = (PreferenceCategory)findPreference("Probes");
+		
 		Resources resources = getResources();
 		String[] probe_list = resources.getStringArray(R.array.probes);
-		
+
 		for(int count = 0; count < probe_list.length; count++){
-			String tag = probe_list[count];
+
+			CheckBoxPreference cb = new CheckBoxPreference(this);
+	        
+			//fill in each checkbox
+			cb.setKey(probe_list[count]);
+	        cb.setTitle(probe_list[count]);
+			cb.setChecked(MainPipeline.isEnabled(getApplicationContext()));
+	        cb.setOnPreferenceChangeListener(this.probeCheckBoxListner);
 			
-			CheckBox cb = new CheckBox(this);
-			cb.setText(probe_list[count]);
-			//cb.setChecked(MainPipeline.isEnabled(getApplicationContext()));
-			cb.setOnCheckedChangeListener(this.checkUpdate);
-			
-			cb.setId(count);
-			//cb.setId(probe_ids[count]);
-			cb.setTag(tag);
-			
-			container.addView(cb);			
-			
+	        pc.addPreference(cb);
 		}
 		
 		//NumberPicker np = new NumberPicker(this);
@@ -59,41 +62,22 @@ public class SettingsActivity extends Activity {
 		//np.setMinValue(0);
 		//np.setMaxValue(10);
 		
-		Button listProbeButton = (Button)findViewById(R.id.listProbeButton);
-		listProbeButton.setOnClickListener(listProbes);
 	}
-
-	OnCheckedChangeListener checkUpdate = new OnCheckedChangeListener(){
+	
+	Preference.OnPreferenceChangeListener probeCheckBoxListner = new Preference.OnPreferenceChangeListener() {
 
 		@Override
-		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		public boolean onPreferenceChange(Preference preference, Object isChecked) {
 			// TODO Auto-generated method stub
-			String tag = (String) buttonView.getTag();
+			//Log.i("Debug",preference.getKey());
 			
-			//Log.i("Debug",tag);
+			if(Boolean.parseBoolean(isChecked.toString())) enableProbe(preference.getKey());
+			else disableProbe(preference.getKey());
 			
-			if(isChecked) enableProbe(tag);
-			else disableProbe(tag);
-		}
-		
+			return true;
+		} 
 	};
 	
-	OnClickListener listProbes = new OnClickListener(){
-
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
-	    	FunfConfig config  = FunfConfig.getInstance((prefs));
-	    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
-	    	
-	    	Log.i("Debug",dataRequest.toString());	
-	    	
-	    	//Intent intent = new Intent(getBaseContext(),PrefActivity.class);
-	    	//startActivity(intent);
-		}
-		
-	};
 	
 	public void enableProbe(String probe){
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
@@ -152,20 +136,20 @@ public class SettingsActivity extends Activity {
 		super.onStop();
 		Log.i("Debug","stop");
 		
-		SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-	    SharedPreferences.Editor editor = sharedPreferences.edit();
-		
-		Resources resources = getResources();
-		String[] probe_list = resources.getStringArray(R.array.probes);
-		
-		for(int count = 0; count < probe_list.length; count++){
-			CheckBox cb = (CheckBox)findViewById(count);
-			//String s = Boolean.toString(cb.isChecked());
-			//Log.i("Debug",s);
-			
-		    editor.putBoolean(probe_list[count], cb.isChecked());
-		    editor.commit();
-		}
+//		SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+//	    SharedPreferences.Editor editor = sharedPreferences.edit();
+//		
+//		Resources resources = getResources();
+//		String[] probe_list = resources.getStringArray(R.array.probes);
+//		
+//		for(int count = 0; count < probe_list.length; count++){
+//			CheckBox cb = (CheckBox)findViewById(count);
+//			//String s = Boolean.toString(cb.isChecked());
+//			//Log.i("Debug",s);
+//			
+//		    editor.putBoolean(probe_list[count], cb.isChecked());
+//		    editor.commit();
+//		}
 	}
 	
 	@Override
@@ -173,18 +157,18 @@ public class SettingsActivity extends Activity {
 		super.onStart();
 		Log.i("Debug","start");
 		
-		SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-		
-		Resources resources = getResources();
-		String[] probe_list = resources.getStringArray(R.array.probes);
-		
-		for(int count = 0; count < probe_list.length; count++){
-			CheckBox cb = (CheckBox)findViewById(count);
-			//String s = Boolean.toString(sharedPreferences.getBoolean(probe_list[count], false));
-			//Log.i("Debug",s);
-			
-			cb.setChecked(sharedPreferences.getBoolean(probe_list[count], false));
-		}
+//		SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+//		
+//		Resources resources = getResources();
+//		String[] probe_list = resources.getStringArray(R.array.probes);
+//		
+//		for(int count = 0; count < probe_list.length; count++){
+//			CheckBox cb = (CheckBox)findViewById(count);
+//			//String s = Boolean.toString(sharedPreferences.getBoolean(probe_list[count], false));
+//			//Log.i("Debug",s);
+//			
+//			cb.setChecked(sharedPreferences.getBoolean(probe_list[count], false));
+//		}
 	}
 
 }
