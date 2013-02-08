@@ -54,7 +54,8 @@ public class MainPipeline extends ConfiguredPipeline {
 	public static final String SCAN_COUNT_KEY = "SCAN_COUNT";
 	
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	protected void onHandleIntent(Intent intent) {		
+		
 		if (ACTION_RUN_ONCE.equals(intent.getAction())) {
 			String probeName = intent.getStringExtra(RUN_ONCE_PROBE_NAME);
 			runProbeOnceNow(probeName);

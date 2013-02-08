@@ -40,12 +40,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		// TODO Auto-generated method stub	
 		
-		setContentView(R.layout.main);
-        
-		Intent archiveIntent = new Intent(getBaseContext(), MainPipeline.class);
-        archiveIntent.setAction(MainPipeline.ACTION_ENABLE);
-        startService(archiveIntent);
+		init();
 		
+		setContentView(R.layout.main);	
+    	
         final Context context = this;
         
         //Button to archive data
@@ -87,7 +85,9 @@ public class MainActivity extends Activity {
         
 		Button listProbeButton = (Button)findViewById(R.id.listProbeButton);
 		listProbeButton.setOnClickListener(listProbes);
-
+		
+		Button changeSettingButton = (Button)findViewById(R.id.changeSettingButton);
+		changeSettingButton.setOnClickListener(changeSetting);
 	}
 	
 	OnClickListener listProbes = new OnClickListener(){
@@ -100,7 +100,11 @@ public class MainActivity extends Activity {
 	    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
 	    	
 			Resources resources = getResources();
-			String[] probe_list = resources.getStringArray(R.array.probes);
+			String[] probe_list = resources.getStringArray(R.array.probes);						
+			
+			Log.i("Debug",Long.toString(config.getDataUploadPeriod()));
+			if(config.getDataUploadUrl()!=null)Log.i("Debug",config.getDataUploadUrl());
+			else Log.i("Debug","Upload URL not set");
 			
 			if(dataRequest.size()==0) Log.i("Debug","All probes are OFF");
 			
@@ -114,6 +118,22 @@ public class MainActivity extends Activity {
 				}
 			}
 	    	
+		}
+		
+	};
+	
+	OnClickListener changeSetting = new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+	    	FunfConfig config  = FunfConfig.getInstance((prefs));
+	    	
+			config.edit().setDataUploadPeriod(200).commit();
+			config.edit().setDataUploadUrl("WHAT").commit();
+			
+			Log.i("Debug","settings changed");
 		}
 		
 	};
@@ -132,6 +152,19 @@ public class MainActivity extends Activity {
 		TextView dataCountView = (TextView)findViewById(R.id.dataCountText);
         dataCountView.setText("Data Count: " + MainPipeline.getScanCount(this));
 
+	}
+	
+	public void init(){
+		
+		Intent archiveIntent = new Intent(getBaseContext(), MainPipeline.class);
+        archiveIntent.setAction(MainPipeline.ACTION_ENABLE);
+        startService(archiveIntent);
+        
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+    	FunfConfig config  = FunfConfig.getInstance((prefs));
+    	
+		config.edit().setDataUploadPeriod(200).commit();
+		config.edit().setDataUploadUrl("BLAH").commit();
 	}
 
 	/* (non-Javadoc)

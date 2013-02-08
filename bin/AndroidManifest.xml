@@ -15,9 +15,11 @@
         <!-- Probe Services -->
         <service android:name="edu.mit.media.funf.probe.builtin.LocationProbe" />
         <service android:name="edu.mit.media.funf.probe.builtin.WifiProbe" />
+        
         <!-- Framework services -->
         <service android:name="edu.mit.media.funf.wifiscanner.MainPipeline" />
         <service android:name="edu.mit.media.funf.storage.NameValueDatabaseService" />
+        <service android:name="edu.mit.media.funf.storage.HttpUploadService"/>
 
         <receiver
             android:name="edu.mit.media.funf.wifiscanner.LauncherReceiver"
@@ -44,18 +46,67 @@
             android:label="@string/title_activity_settings" >
         </activity>
     </application>
-    <!-- Launching -->
+    
+    <!-- Battery Probe and launching -->
     <uses-permission android:name="android.permission.BATTERY_STATS" />
+   
+
     <!-- All probes -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+   
+    <!-- Location probe, Cell probe -->
+        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+   
     <!-- Location probe -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- Wifi probe -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <!-- Storage -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>  
+   
+   
+    <!-- Wifi and Hardware Info probes -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+   
+     <!-- Wifi probe -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+   
+    <!-- Bluetooth probe -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+   
+    <!-- Bluetooth and Hardware Info probes -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+   
+    <!-- Running applications probe -->
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+   
+    <!-- Browser probes -->
+    <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
+   
+    <!-- Call Log and Contact probes -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+   
+    <!-- Backing up database to SD card -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+   
+    <!-- Backing up to the web -->
+    <uses-permission android:name="android.permission.INTERNET" />
+   
+    <!--  SMS Probe -->
+    <uses-permission android:name="android.permission.READ_SMS" />
+   
+    <!-- Running applications probe -->
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+   
+    <!-- Running Audio features probe -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+   
+    <!-- Backing up database to SD card -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+   
+    <!-- Backing up to the web -->
+    <uses-permission android:name="android.permission.INTERNET" />
+   
+    <!-- DatabaseService, Archive service (unique ids) -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    
 
 </manifest><!--
  * Funf: Open Sensing Framework
