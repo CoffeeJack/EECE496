@@ -1,15 +1,8 @@
-{       
-    "name": "WifiScanner",
-    "version":1,
-    "dataArchivePeriod":3600,
-    "configUpdateUrl":"http:\/\/www.samplewebsite.com\/funfconfig",
-    "configUpdatePeriod":10800,
-    "dataArchivePeriod":3600,
-    "dataUploadUrl":"http:\/\/www.samplewebsite.com\/uploadurl",
-    "dataUploadPeriod":43200,
-    "dataRequests":{
-                "edu.mit.media.funf.probe.builtin.LocationProbe": [
-            	{ "PERIOD": 900, "DURATION": 30 }
-        		]
-    }
+{       "name": "WifiScanner",
+        "version":1,
+        "configUpdateUrl":"",
+        "configUpdatePeriod":10800,
+        "dataArchivePeriod":3600,
+        "dataUploadUrl":"http://192.168.1.102:3000/upload",
+        "dataUploadPeriod":43200 
 }

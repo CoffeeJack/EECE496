@@ -88,6 +88,9 @@ public class MainActivity extends Activity {
 		
 		Button changeSettingButton = (Button)findViewById(R.id.changeSettingButton);
 		changeSettingButton.setOnClickListener(changeSetting);
+		
+		Button resetButton = (Button)findViewById(R.id.resetButton);
+		resetButton.setOnClickListener(reset);
 	}
 	
 	OnClickListener listProbes = new OnClickListener(){
@@ -130,10 +133,25 @@ public class MainActivity extends Activity {
 			SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
 	    	FunfConfig config  = FunfConfig.getInstance((prefs));
 	    	
-			config.edit().setDataUploadPeriod(200).commit();
-			config.edit().setDataUploadUrl("WHAT").commit();
+			//config.edit().setDataUploadPeriod(15).commit();
+			//config.edit().setDataUploadUrl("http://192.168.1.102:3000/upload").commit();
+	    	
+	    	Intent uploadIntent = new Intent(getBaseContext(), MainPipeline.class);
+	    	uploadIntent.setAction(MainPipeline.ACTION_UPLOAD_DATA);
+	    	startService(uploadIntent);	    
 			
-			Log.i("Debug","settings changed");
+			Log.i("Debug","Uploading...");
+		}
+		
+	};
+	
+	OnClickListener reset = new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Log.i("Debug","RESET");
+			init();
 		}
 		
 	};
@@ -163,8 +181,9 @@ public class MainActivity extends Activity {
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
     	FunfConfig config  = FunfConfig.getInstance((prefs));
     	
-		config.edit().setDataUploadPeriod(200).commit();
-		config.edit().setDataUploadUrl("BLAH").commit();
+		config.edit().setDataUploadPeriod(FunfConfig.DEFAULT_DATA_UPLOAD_PERIOD).commit();
+    	//config.edit().setDataUploadPeriod(30).commit();
+		config.edit().setDataUploadUrl("http://192.168.1.102:3000/upload").commit();
 	}
 
 	/* (non-Javadoc)
