@@ -14,7 +14,10 @@
 
         <!-- Probe Services -->
         <service android:name="edu.mit.media.funf.probe.builtin.LocationProbe" />
-        <service android:name="edu.mit.media.funf.probe.builtin.WifiProbe" />
+        <service android:name="edu.mit.media.funf.probe.builtin.AccelerometerSensorProbe" />
+        <service android:name="edu.mit.media.funf.probe.builtin.ActivityProbe" />
+        <service android:name="edu.mit.media.funf.probe.builtin.CallLogProbe" />
+        <service android:name="edu.mit.media.funf.probe.builtin.SMSProbe" />
         
         <!-- Framework services -->
         <service android:name="edu.mit.media.funf.wifiscanner.MainPipeline" />

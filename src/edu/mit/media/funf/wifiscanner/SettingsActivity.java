@@ -126,7 +126,7 @@ public class SettingsActivity extends PreferenceActivity {
 			for(Bundle param_set : params){
 				if(param_set.containsKey("PERIOD")){
 					param_set.remove("PERIOD");
-					param_set.putInt("PERIOD", period);
+					param_set.putInt("PERIOD", period * 60);
 				}
 			}
 		}

@@ -91,6 +91,9 @@ public class MainActivity extends Activity {
 		
 		Button resetButton = (Button)findViewById(R.id.resetButton);
 		resetButton.setOnClickListener(reset);
+		
+		Button exitButton = (Button)findViewById(R.id.exitButton);
+		exitButton.setOnClickListener(exit);
 	}
 	
 	OnClickListener listProbes = new OnClickListener(){
@@ -156,6 +159,21 @@ public class MainActivity extends Activity {
 		
 	};
 	
+	OnClickListener exit = new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent intent = new Intent(getBaseContext(), MainPipeline.class);
+			String action = MainPipeline.ACTION_DISABLE;
+			intent.setAction(action);
+            startService(intent);
+			
+			finish();
+		}
+		
+	};
+	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {	    
 		
 		Log.i("WifiScanner", "SharedPref change: " + key);
@@ -178,13 +196,18 @@ public class MainActivity extends Activity {
         archiveIntent.setAction(MainPipeline.ACTION_ENABLE);
         startService(archiveIntent);
         
+//        Intent uploadIntent = new Intent(getBaseContext(), MainPipeline.class);
+//    	uploadIntent.setAction(MainPipeline.ACTION_UPLOAD_DATA);
+//    	startService(uploadIntent);	
+        
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
     	FunfConfig config  = FunfConfig.getInstance((prefs));
     	
-		config.edit().setDataUploadPeriod(FunfConfig.DEFAULT_DATA_UPLOAD_PERIOD).commit();
-    	//config.edit().setDataUploadPeriod(30).commit();
-		config.edit().setDataUploadUrl("http://192.168.1.102:3000/upload").commit();
+		//config.edit().setDataUploadPeriod(FunfConfig.DEFAULT_DATA_UPLOAD_PERIOD).commit();
+    	config.edit().setDataUploadPeriod(600).commit();
+		config.edit().setDataUploadUrl("http://192.168.1.105:9000/upload").commit();
 	}
+	
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onStart()
@@ -241,7 +264,6 @@ public class MainActivity extends Activity {
 	public void onDestroy() {
 		super.onDestroy();
 		// TODO Auto-generated method stub
-		
 		Log.i("Main","Destroy");
 
 	}

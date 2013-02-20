@@ -79,9 +79,15 @@ public class MainPipeline extends ConfiguredPipeline {
 	@Override
 	public void onDataReceived(Bundle data) {
 		super.onDataReceived(data);
-		// Fill this in with extra behaviors on data received
-		Log.i("Debug","Data Received");
 		
+		String dataJson = getBundleSerializer().serialize(data);
+		String probeName = data.getString(Probe.PROBE);
+		
+		// Fill this in with extra behaviors on data received
+		//Log.i("Debug","Data Received");
+		Log.i("DataLog",probeName);
+		Log.i("DataLog",dataJson);
+				
 		incrementCount();
 	}
 	

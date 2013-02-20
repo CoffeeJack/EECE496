@@ -29,11 +29,11 @@
     </PreferenceCategory>
     
     <PreferenceCategory
-        android:title="Wifi Probe"
-        android:key="container_WifiProbe">
+        android:title="Acelerometer Probe"
+        android:key="container_AccelerometerSensorProbe">
         
         <com.michaelnovakjr.numberpicker.NumberPickerPreference
-            android:key="period_WifiProbe"
+            android:key="period_AccelerometerSensorProbe"
             android:title="Period"
             android:summary="Sampling period in minutes"
             picker:defaultValue="0"
@@ -42,7 +42,7 @@
         />
         
         <com.michaelnovakjr.numberpicker.NumberPickerPreference
-            android:key="duration_WifiProbe"
+            android:key="duration_AccelerometerSensorProbe"
             android:title="Duration"
             android:summary="Duration of each sample in seconds"
             picker:defaultValue="0"
@@ -53,11 +53,11 @@
     </PreferenceCategory>
     
     <PreferenceCategory
-        android:title="Bluetooth Probe"
-        android:key="container_BluetoothProbe">
+        android:title="Activity Probe"
+        android:key="container_ActivityProbe">
         
         <com.michaelnovakjr.numberpicker.NumberPickerPreference
-            android:key="period_BluetoothProbe"
+            android:key="period_ActivityProbe"
             android:title="Period"
             android:summary="Sampling period in minutes"
             picker:defaultValue="0"
@@ -66,7 +66,55 @@
         />
         
         <com.michaelnovakjr.numberpicker.NumberPickerPreference
-            android:key="duration_BluetoothProbe"
+            android:key="duration_ActivityProbe"
+            android:title="Duration"
+            android:summary="Duration of each sample in seconds"
+            picker:defaultValue="0"
+            picker:startRange="0"
+            picker:endRange="60" 
+        />
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:title="Call Log Probe"
+        android:key="container_CallLogProbe">
+        
+        <com.michaelnovakjr.numberpicker.NumberPickerPreference
+            android:key="period_CallLogProbe"
+            android:title="Period"
+            android:summary="Sampling period in minutes"
+            picker:defaultValue="0"
+            picker:startRange="0"
+            picker:endRange="60" 
+        />
+        
+        <com.michaelnovakjr.numberpicker.NumberPickerPreference
+            android:key="duration_CallLogProbe"
+            android:title="Duration"
+            android:summary="Duration of each sample in seconds"
+            picker:defaultValue="0"
+            picker:startRange="0"
+            picker:endRange="60" 
+        />
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:title="SMS Probe"
+        android:key="container_SMSProbe">
+        
+        <com.michaelnovakjr.numberpicker.NumberPickerPreference
+            android:key="period_SMSProbe"
+            android:title="Period"
+            android:summary="Sampling period in minutes"
+            picker:defaultValue="0"
+            picker:startRange="0"
+            picker:endRange="60" 
+        />
+        
+        <com.michaelnovakjr.numberpicker.NumberPickerPreference
+            android:key="duration_SMSProbe"
             android:title="Duration"
             android:summary="Duration of each sample in seconds"
             picker:defaultValue="0"

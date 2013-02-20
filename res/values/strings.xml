@@ -30,8 +30,10 @@
     
     <string-array name="probes">
         <item>LocationProbe</item>
-        <item>WifiProbe</item>
-        <item>BluetoothProbe</item>
+        <item>AccelerometerSensorProbe</item>
+        <item>ActivityProbe</item>
+        <item>CallLogProbe</item>
+        <item>SMSProbe</item>
     </string-array>
     
     <string name="dialog_set_number">Set</string>
