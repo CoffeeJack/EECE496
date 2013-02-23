@@ -13,10 +13,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.media.funf.configured.FunfConfig;
 import edu.mit.media.funf.probe.builtin.LocationProbe;
@@ -46,32 +48,33 @@ public class MainActivity extends Activity {
     	
         final Context context = this;
         
+        updateMainActivity();
+        
         //Button to archive data
-        Button archiveButton = (Button)findViewById(R.id.archiveButton);
-        archiveButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                        Intent archiveIntent = new Intent(context, MainPipeline.class);
-                        archiveIntent.setAction(MainPipeline.ACTION_ARCHIVE_DATA);
-                        startService(archiveIntent);
-                }
-        });
+//        Button archiveButton = (Button)findViewById(R.id.archiveButton);
+//        archiveButton.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                        Intent archiveIntent = new Intent(context, MainPipeline.class);
+//                        archiveIntent.setAction(MainPipeline.ACTION_ARCHIVE_DATA);
+//                        startService(archiveIntent);
+//                }
+//        });
         
         //Button to scan data
-        Button scanNowButton = (Button)findViewById(R.id.scanNowButton);
-        scanNowButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                        Intent runOnceIntent = new Intent(context, MainPipeline.class);
-                        runOnceIntent.setAction(MainPipeline.ACTION_RUN_ONCE);
-                        //runOnceIntent.putExtra(MainPipeline.RUN_ONCE_PROBE_NAME, WifiProbe.class.getName());
-                        //startService(runOnceIntent);
-                        runOnceIntent.putExtra(MainPipeline.RUN_ONCE_PROBE_NAME, LocationProbe.class.getName());
-                        startService(runOnceIntent);
-                }
-        });
-
-        
+//        Button scanNowButton = (Button)findViewById(R.id.scanNowButton);
+//        scanNowButton.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                        Intent runOnceIntent = new Intent(context, MainPipeline.class);
+//                        runOnceIntent.setAction(MainPipeline.ACTION_RUN_ONCE);
+//                        //runOnceIntent.putExtra(MainPipeline.RUN_ONCE_PROBE_NAME, WifiProbe.class.getName());
+//                        //startService(runOnceIntent);
+//                        runOnceIntent.putExtra(MainPipeline.RUN_ONCE_PROBE_NAME, LocationProbe.class.getName());
+//                        startService(runOnceIntent);
+//                }
+//        });
+               
         //Get current config
         Button getConfigButton = (Button)findViewById(R.id.getConfigButton);
         getConfigButton.setOnClickListener(new OnClickListener(){
@@ -108,7 +111,9 @@ public class MainActivity extends Activity {
 			Resources resources = getResources();
 			String[] probe_list = resources.getStringArray(R.array.probes);						
 			
-			Log.i("Debug",Long.toString(config.getDataUploadPeriod()));
+			Log.i("Debug","Upload Period: "+Long.toString(config.getDataUploadPeriod()));
+			Log.i("Debug","Archive Period: "+Long.toString(config.getDataArchivePeriod()));
+			
 			if(config.getDataUploadUrl()!=null)Log.i("Debug",config.getDataUploadUrl());
 			else Log.i("Debug","Upload URL not set");
 			
@@ -124,6 +129,7 @@ public class MainActivity extends Activity {
 				}
 			}
 	    	
+			updateMainActivity();
 		}
 		
 	};
@@ -134,10 +140,7 @@ public class MainActivity extends Activity {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
-	    	FunfConfig config  = FunfConfig.getInstance((prefs));
-	    	
-			//config.edit().setDataUploadPeriod(15).commit();
-			//config.edit().setDataUploadUrl("http://192.168.1.102:3000/upload").commit();
+	    	FunfConfig config  = FunfConfig.getInstance((prefs));	    	
 	    	
 	    	Intent uploadIntent = new Intent(getBaseContext(), MainPipeline.class);
 	    	uploadIntent.setAction(MainPipeline.ACTION_UPLOAD_DATA);
@@ -203,11 +206,47 @@ public class MainActivity extends Activity {
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
     	FunfConfig config  = FunfConfig.getInstance((prefs));
     	
-		//config.edit().setDataUploadPeriod(FunfConfig.DEFAULT_DATA_UPLOAD_PERIOD).commit();
-    	config.edit().setDataUploadPeriod(600).commit();
-		config.edit().setDataUploadUrl("http://192.168.1.105:9000/upload").commit();
+		config.edit().setDataUploadPeriod(FunfConfig.DEFAULT_DATA_UPLOAD_PERIOD).commit();
+		config.edit().setDataArchivePeriod(FunfConfig.DEFAULT_DATA_ARCHIVE_PERIOD).commit();
+    	//config.edit().setDataUploadPeriod(300).commit();
+    	//config.edit().setDataArchivePeriod(150).commit();
+		//config.edit().setDataUploadUrl("http://192.168.1.105:9000/upload").commit();
+    	config.edit().setDataUploadUrl("http://142.103.25.45:9000/upload").commit(); //MAGIC LAB
 	}
 	
+	public void updateMainActivity(){
+		
+		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+    	FunfConfig config  = FunfConfig.getInstance((prefs));
+    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
+    	
+		Resources resources = getResources();
+		String[] probe_list = resources.getStringArray(R.array.probes);	
+		
+		TextView archivePeriod = (TextView)findViewById(R.id.archivePeriod);
+		archivePeriod.setText("Archive Period: "+Long.toString(config.getDataArchivePeriod()) + " seconds");
+		
+		TextView uploadPeriod = (TextView)findViewById(R.id.uploadPeriod);
+		uploadPeriod.setText("Upload Period: "+Long.toString(config.getDataUploadPeriod()) + " seconds");
+		
+		TextView probeSettingView = (TextView)findViewById(R.id.probeSettings);
+		
+		String probeSettings = "";
+		
+		if(dataRequest.size()==0) probeSettings = "All Probes Are OFF!";
+		
+		for(int i = 0; i < probe_list.length;i++){
+			if(dataRequest.containsKey(SettingsActivity.probe_prefix+probe_list[i])){
+				Bundle[] params = dataRequest.get(SettingsActivity.probe_prefix+probe_list[i]);
+				
+				for(Bundle param_set : params){
+					probeSettings += probe_list[i].replace("Probe","")+" "+param_set.toString() + "\n";
+				}
+			}
+		}
+		
+		probeSettingView.setText(probeSettings);
+	}
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onStart()
@@ -229,6 +268,7 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		
 		Log.i("Main","Resume");
+		updateMainActivity();
 		updateScanCount();
 
 	}

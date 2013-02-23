@@ -2,17 +2,17 @@
 <resources>
     <!-- periods are in seconds -->
     <integer-array name="default_periods">
-        <item>1800</item> <!-- LocationProbe -->
-        <item>3600</item> <!-- AccelerometerSensorProbe -->
+        <item>60</item> <!-- LocationProbe -->
+        <item>60</item> <!-- AccelerometerSensorProbe -->
         <item>60</item> <!-- ActivityProbe -->
         <item>3600</item> <!-- CallLogProbe -->
         <item>3600</item> <!-- SMSProbe -->
     </integer-array>
     
     <integer-array name="default_durations">
-    	<item>120</item> <!-- LocationProbe -->
-        <item>60</item> <!-- AccelerometerSensorProbe -->
-        <item>5</item> <!-- ActivityProbe -->
+    	<item>30</item> <!-- LocationProbe -->
+        <item>30</item> <!-- AccelerometerSensorProbe -->
+        <item>30</item> <!-- ActivityProbe -->
         <item>0</item> <!-- CallLogProbe -->
         <item>0</item> <!-- SMSProbe -->
     </integer-array>

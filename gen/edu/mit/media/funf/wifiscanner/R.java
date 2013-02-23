@@ -130,21 +130,22 @@ containing a value of this type.
         public static final int numberpicker_up_selected=0x7f02002e;
     }
     public static final class id {
-        public static final int archiveButton=0x7f080002;
-        public static final int changeSettingButton=0x7f080007;
-        public static final int dataCountText=0x7f080003;
-        public static final int decrement=0x7f08000c;
-        public static final int exitButton=0x7f080009;
-        public static final int getConfigButton=0x7f080005;
-        public static final int increment=0x7f08000a;
-        public static final int listProbeButton=0x7f080006;
-        public static final int menu_settings=0x7f08000e;
+        public static final int archivePeriod=0x7f080008;
+        public static final int changeSettingButton=0x7f080005;
+        public static final int dataCountText=0x7f080002;
+        public static final int decrement=0x7f08000d;
+        public static final int exitButton=0x7f080007;
+        public static final int getConfigButton=0x7f080003;
+        public static final int increment=0x7f08000b;
+        public static final int listProbeButton=0x7f080004;
+        public static final int menu_settings=0x7f08000f;
         public static final int num_picker=0x7f080001;
-        public static final int pref_num_picker=0x7f08000d;
-        public static final int resetButton=0x7f080008;
-        public static final int scanNowButton=0x7f080004;
+        public static final int pref_num_picker=0x7f08000e;
+        public static final int probeSettings=0x7f08000a;
+        public static final int resetButton=0x7f080006;
         public static final int settingsContainer=0x7f080000;
-        public static final int timepicker_input=0x7f08000b;
+        public static final int timepicker_input=0x7f08000c;
+        public static final int uploadPeriod=0x7f080009;
     }
     public static final class layout {
         public static final int activity_settings=0x7f030000;

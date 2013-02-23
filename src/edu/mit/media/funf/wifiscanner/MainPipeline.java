@@ -85,8 +85,8 @@ public class MainPipeline extends ConfiguredPipeline {
 		
 		// Fill this in with extra behaviors on data received
 		//Log.i("Debug","Data Received");
-		Log.i("DataLog",probeName);
-		Log.i("DataLog",dataJson);
+		//Log.i("DataLog",probeName);
+		//Log.i("DataLog",dataJson);
 				
 		incrementCount();
 	}
@@ -95,7 +95,7 @@ public class MainPipeline extends ConfiguredPipeline {
 	public void onStatusReceived(Probe.Status status) {
 		super.onStatusReceived(status);
 		// Fill this in with extra behaviors on status received
-		Log.i("Debug","Status Received");
+		//Log.i("Debug","Status Received");
 	}
 	
 	@Override
@@ -104,6 +104,13 @@ public class MainPipeline extends ConfiguredPipeline {
 		// Fill this in with extra behaviors on details received
 		Log.i("Debug","Detail Received");
 	}
+	
+//	@Override
+//	public void uploadData(){
+//		super.uploadData();
+//		
+//		Log.i("Debug","Uploading!");
+//	}
 	
 	public static boolean isEnabled(Context context) {
 		return getSystemPrefs(context).getBoolean(ENABLED_KEY, true);
