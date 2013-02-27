@@ -23,6 +23,7 @@ import android.widget.TextView;
 import edu.mit.media.funf.configured.FunfConfig;
 import edu.mit.media.funf.probe.builtin.LocationProbe;
 import edu.mit.media.funf.probe.builtin.WifiProbe;
+import android.provider.Settings.Secure;
 
 /**
  * 
@@ -37,6 +38,12 @@ public class MainActivity extends Activity {
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
+	static boolean real_time;
+	static final String REAL_TIME_UPLOAD_URL = "http://142.103.25.45:9000/rt";
+	//static final String REAL_TIME_UPLOAD_URL = "http://192.168.1.105:9000/rt";
+	static final String UPLOAD_URL = "http://142.103.25.45:9000/upload";
+	//static final String UPLOAD_URL = "http://192.168.1.105:9000/upload";
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,7 +81,11 @@ public class MainActivity extends Activity {
 //                        startService(runOnceIntent);
 //                }
 //        });
-               
+        
+        //Enable/Disable Real-time upload
+        CheckBox enableRealTime = (CheckBox)findViewById(R.id.enableRealTime);
+        enableRealTime.setOnCheckedChangeListener(setRealTime);
+        
         //Get current config
         Button getConfigButton = (Button)findViewById(R.id.getConfigButton);
         getConfigButton.setOnClickListener(new OnClickListener(){
@@ -99,6 +110,19 @@ public class MainActivity extends Activity {
 		exitButton.setOnClickListener(exit);
 	}
 	
+	OnCheckedChangeListener setRealTime = new OnCheckedChangeListener(){
+
+		@Override
+		public void onCheckedChanged(CompoundButton checkbox, boolean isChecked) {
+			// TODO Auto-generated method stub
+			if(isChecked) real_time = true;
+			else real_time = false;
+			
+			Log.i("Debug",Boolean.toString(real_time));
+		}
+		
+	};
+	
 	OnClickListener listProbes = new OnClickListener(){
 
 		@Override
@@ -111,6 +135,10 @@ public class MainActivity extends Activity {
 			Resources resources = getResources();
 			String[] probe_list = resources.getStringArray(R.array.probes);						
 			
+			String android_id = Secure.getString(getBaseContext().getContentResolver(),Secure.ANDROID_ID); 
+			Log.i("Debug",android_id);
+			
+			Log.i("Debug","Real-time Upload = "+Boolean.toString(real_time));
 			Log.i("Debug","Upload Period: "+Long.toString(config.getDataUploadPeriod()));
 			Log.i("Debug","Archive Period: "+Long.toString(config.getDataArchivePeriod()));
 			
@@ -144,7 +172,10 @@ public class MainActivity extends Activity {
 	    	
 	    	Intent uploadIntent = new Intent(getBaseContext(), MainPipeline.class);
 	    	uploadIntent.setAction(MainPipeline.ACTION_UPLOAD_DATA);
-	    	startService(uploadIntent);	    
+	    	startService(uploadIntent);
+			
+//			RequestTask req = new RequestTask();
+//			Log.i("Debug",req.execute("http://192.168.1.105:9000/rt","hah").toString());
 			
 			Log.i("Debug","Uploading...");
 		}
@@ -199,19 +230,13 @@ public class MainActivity extends Activity {
         archiveIntent.setAction(MainPipeline.ACTION_ENABLE);
         startService(archiveIntent);
         
-//        Intent uploadIntent = new Intent(getBaseContext(), MainPipeline.class);
-//    	uploadIntent.setAction(MainPipeline.ACTION_UPLOAD_DATA);
-//    	startService(uploadIntent);	
-        
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
     	FunfConfig config  = FunfConfig.getInstance((prefs));
     	
 		config.edit().setDataUploadPeriod(FunfConfig.DEFAULT_DATA_UPLOAD_PERIOD).commit();
 		config.edit().setDataArchivePeriod(FunfConfig.DEFAULT_DATA_ARCHIVE_PERIOD).commit();
-    	//config.edit().setDataUploadPeriod(300).commit();
-    	//config.edit().setDataArchivePeriod(150).commit();
-		//config.edit().setDataUploadUrl("http://192.168.1.105:9000/upload").commit();
-    	config.edit().setDataUploadUrl("http://142.103.25.45:9000/upload").commit(); //MAGIC LAB
+		config.edit().setDataUploadUrl(this.UPLOAD_URL).commit();
+    	
 	}
 	
 	public void updateMainActivity(){

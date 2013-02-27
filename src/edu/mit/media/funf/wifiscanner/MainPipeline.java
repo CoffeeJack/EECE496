@@ -41,6 +41,7 @@ import edu.mit.media.funf.configured.ConfiguredPipeline;
 import edu.mit.media.funf.configured.FunfConfig;
 import edu.mit.media.funf.probe.Probe;
 import edu.mit.media.funf.storage.BundleSerializer;
+import android.provider.Settings.Secure;
 
 public class MainPipeline extends ConfiguredPipeline {
 	
@@ -78,15 +79,18 @@ public class MainPipeline extends ConfiguredPipeline {
 	
 	@Override
 	public void onDataReceived(Bundle data) {
+		String android_id = Secure.getString(getBaseContext().getContentResolver(),Secure.ANDROID_ID); 
+		data.putString("Device_ID",android_id);
+		
 		super.onDataReceived(data);
 		
-		String dataJson = getBundleSerializer().serialize(data);
-		String probeName = data.getString(Probe.PROBE);
-		
-		// Fill this in with extra behaviors on data received
-		//Log.i("Debug","Data Received");
-		//Log.i("DataLog",probeName);
-		//Log.i("DataLog",dataJson);
+		if(MainActivity.real_time){
+			
+			data.putString("WoTK_ID","coffeejack"); //add WotKit info here
+			String dataJson = getBundleSerializer().serialize(data);
+			
+			new RequestTask().execute(MainActivity.REAL_TIME_UPLOAD_URL,dataJson);	
+		}
 				
 		incrementCount();
 	}
@@ -105,12 +109,6 @@ public class MainPipeline extends ConfiguredPipeline {
 		Log.i("Debug","Detail Received");
 	}
 	
-//	@Override
-//	public void uploadData(){
-//		super.uploadData();
-//		
-//		Log.i("Debug","Uploading!");
-//	}
 	
 	public static boolean isEnabled(Context context) {
 		return getSystemPrefs(context).getBoolean(ENABLED_KEY, true);
@@ -192,6 +190,12 @@ public class MainPipeline extends ConfiguredPipeline {
 		request.putExtra(Probe.REQUESTS_KEY, updatedRequests);
 		startService(request);
 	}
+	
+//	@Override
+//	public void uploadData(){
+//		Log.i("Debug","upload override!");
+//		super.uploadData();		
+//	}
 	
 	//ADDED AS PER TUTORIAL
 	

@@ -3,7 +3,7 @@
         "configUpdateUrl":"",
         "configUpdatePeriod":10800,
         "dataArchivePeriod":3600,
-        "dataUploadUrl":"http://192.168.1.105:9000/upload",
+        "dataUploadUrl":"http://142.103.25.45:9000/upload",
         "dataUploadPeriod":43200,
         "dataRequests":{
         } 
