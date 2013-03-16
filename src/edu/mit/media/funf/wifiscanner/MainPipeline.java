@@ -61,6 +61,10 @@ public class MainPipeline extends ConfiguredPipeline {
 			String probeName = intent.getStringExtra(RUN_ONCE_PROBE_NAME);
 			runProbeOnceNow(probeName);
 		} else {
+			String action = intent.getAction();
+			if(super.ACTION_UPLOAD_DATA.equals(action)){
+				//disable real-time upload if need be
+			}
 			super.onHandleIntent(intent);
 		}
 	}

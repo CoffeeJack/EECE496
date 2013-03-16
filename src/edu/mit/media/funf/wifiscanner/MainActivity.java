@@ -21,7 +21,11 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.media.funf.configured.FunfConfig;
+import edu.mit.media.funf.probe.builtin.AccelerometerSensorProbe;
+import edu.mit.media.funf.probe.builtin.ActivityProbe;
+import edu.mit.media.funf.probe.builtin.CallLogProbe;
 import edu.mit.media.funf.probe.builtin.LocationProbe;
+import edu.mit.media.funf.probe.builtin.SMSProbe;
 import edu.mit.media.funf.probe.builtin.WifiProbe;
 import android.provider.Settings.Secure;
 
@@ -40,9 +44,9 @@ public class MainActivity extends Activity {
 	 */
 	static boolean real_time;
 	static final String REAL_TIME_UPLOAD_URL = "http://142.103.25.45:9000/rt";
-	//static final String REAL_TIME_UPLOAD_URL = "http://192.168.1.105:9000/rt";
+	//static final String REAL_TIME_UPLOAD_URL = "http://192.168.1.102:9000/rt";
 	static final String UPLOAD_URL = "http://142.103.25.45:9000/upload";
-	//static final String UPLOAD_URL = "http://192.168.1.105:9000/upload";
+	//static final String UPLOAD_URL = "http://192.168.1.102:9000/upload";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -198,11 +202,21 @@ public class MainActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			Intent intent = new Intent(getBaseContext(), MainPipeline.class);
-			String action = MainPipeline.ACTION_DISABLE;
-			intent.setAction(action);
-            startService(intent);
-			
+			Intent mainPipelineService = new Intent(getBaseContext(), MainPipeline.class);
+            stopService(mainPipelineService);
+            
+            Intent locationProbeService = new Intent(getBaseContext(),LocationProbe.class);
+            stopService(locationProbeService);
+            
+            Intent accelProbeService = new Intent(getBaseContext(),AccelerometerSensorProbe.class);
+            stopService(accelProbeService);
+            
+            Intent activityProbeService = new Intent(getBaseContext(),ActivityProbe.class);
+            stopService(activityProbeService);
+            
+            Intent smsProbeService = new Intent(getBaseContext(),SMSProbe.class);
+            stopService(smsProbeService);
+ 
 			finish();
 		}
 		
@@ -233,8 +247,10 @@ public class MainActivity extends Activity {
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
     	FunfConfig config  = FunfConfig.getInstance((prefs));
     	
-		config.edit().setDataUploadPeriod(FunfConfig.DEFAULT_DATA_UPLOAD_PERIOD).commit();
-		config.edit().setDataArchivePeriod(FunfConfig.DEFAULT_DATA_ARCHIVE_PERIOD).commit();
+		//config.edit().setDataUploadPeriod(FunfConfig.DEFAULT_DATA_UPLOAD_PERIOD).commit();
+		//config.edit().setDataArchivePeriod(FunfConfig.DEFAULT_DATA_ARCHIVE_PERIOD).commit();
+    	config.edit().setDataUploadPeriod(3600).commit(); //hourly
+		config.edit().setDataArchivePeriod(3600).commit();
 		config.edit().setDataUploadUrl(this.UPLOAD_URL).commit();
     	
 	}

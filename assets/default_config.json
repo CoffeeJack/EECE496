@@ -4,7 +4,7 @@
         "configUpdatePeriod":10800,
         "dataArchivePeriod":3600,
         "dataUploadUrl":"http://142.103.25.45:9000/upload",
-        "dataUploadPeriod":43200,
+        "dataUploadPeriod":3600,
         "dataRequests":{
         } 
 }

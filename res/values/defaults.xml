@@ -11,7 +11,7 @@
     
     <integer-array name="default_durations">
     	<item>30</item> <!-- LocationProbe -->
-        <item>30</item> <!-- AccelerometerSensorProbe -->
+        <item>1</item> <!-- AccelerometerSensorProbe -->
         <item>30</item> <!-- ActivityProbe -->
         <item>0</item> <!-- CallLogProbe -->
         <item>0</item> <!-- SMSProbe -->
