@@ -42,11 +42,18 @@ public class MainActivity extends Activity {
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
+	/**********CONFIGURATION**************/
 	static boolean real_time;
+	
 	static final String REAL_TIME_UPLOAD_URL = "http://142.103.25.45:9000/rt";
 	//static final String REAL_TIME_UPLOAD_URL = "http://192.168.1.102:9000/rt";
+	
 	static final String UPLOAD_URL = "http://142.103.25.45:9000/upload";
 	//static final String UPLOAD_URL = "http://192.168.1.102:9000/upload";
+	
+	static final Integer archive_period = 3600;
+	
+	/**********CODES**************/
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,31 +68,6 @@ public class MainActivity extends Activity {
         
         updateMainActivity();
         
-        //Button to archive data
-//        Button archiveButton = (Button)findViewById(R.id.archiveButton);
-//        archiveButton.setOnClickListener(new OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                        Intent archiveIntent = new Intent(context, MainPipeline.class);
-//                        archiveIntent.setAction(MainPipeline.ACTION_ARCHIVE_DATA);
-//                        startService(archiveIntent);
-//                }
-//        });
-        
-        //Button to scan data
-//        Button scanNowButton = (Button)findViewById(R.id.scanNowButton);
-//        scanNowButton.setOnClickListener(new OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                        Intent runOnceIntent = new Intent(context, MainPipeline.class);
-//                        runOnceIntent.setAction(MainPipeline.ACTION_RUN_ONCE);
-//                        //runOnceIntent.putExtra(MainPipeline.RUN_ONCE_PROBE_NAME, WifiProbe.class.getName());
-//                        //startService(runOnceIntent);
-//                        runOnceIntent.putExtra(MainPipeline.RUN_ONCE_PROBE_NAME, LocationProbe.class.getName());
-//                        startService(runOnceIntent);
-//                }
-//        });
-        
         //Enable/Disable Real-time upload
         CheckBox enableRealTime = (CheckBox)findViewById(R.id.enableRealTime);
         enableRealTime.setOnCheckedChangeListener(setRealTime);
@@ -96,19 +78,24 @@ public class MainActivity extends Activity {
         	@Override
             public void onClick(View v) {
         		
-        		Intent intent = new Intent(getBaseContext(),SettingsActivity.class);
-        		startActivity(intent);
+        		try{
+        			Intent intent = new Intent(getBaseContext(),SettingsActivity.class);
+            		startActivity(intent);
+        		}catch(Exception e){
+        			Log.e("ERROR",e.getMessage());
+        		}
+        		
         	}
         });
         
-		Button listProbeButton = (Button)findViewById(R.id.listProbeButton);
-		listProbeButton.setOnClickListener(listProbes);
+//		Button listProbeButton = (Button)findViewById(R.id.listProbeButton);
+//		listProbeButton.setOnClickListener(listProbes);
+//		
+//		Button changeSettingButton = (Button)findViewById(R.id.changeSettingButton);
+//		changeSettingButton.setOnClickListener(changeSetting);
 		
-		Button changeSettingButton = (Button)findViewById(R.id.changeSettingButton);
-		changeSettingButton.setOnClickListener(changeSetting);
-		
-		Button resetButton = (Button)findViewById(R.id.resetButton);
-		resetButton.setOnClickListener(reset);
+//		Button resetButton = (Button)findViewById(R.id.resetButton);
+//		resetButton.setOnClickListener(reset);
 		
 		Button exitButton = (Button)findViewById(R.id.exitButton);
 		exitButton.setOnClickListener(exit);
@@ -132,36 +119,41 @@ public class MainActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
-	    	FunfConfig config  = FunfConfig.getInstance((prefs));
-	    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
-	    	
-			Resources resources = getResources();
-			String[] probe_list = resources.getStringArray(R.array.probes);						
 			
-			String android_id = Secure.getString(getBaseContext().getContentResolver(),Secure.ANDROID_ID); 
-			Log.i("Debug",android_id);
-			
-			Log.i("Debug","Real-time Upload = "+Boolean.toString(real_time));
-			Log.i("Debug","Upload Period: "+Long.toString(config.getDataUploadPeriod()));
-			Log.i("Debug","Archive Period: "+Long.toString(config.getDataArchivePeriod()));
-			
-			if(config.getDataUploadUrl()!=null)Log.i("Debug",config.getDataUploadUrl());
-			else Log.i("Debug","Upload URL not set");
-			
-			if(dataRequest.size()==0) Log.i("Debug","All probes are OFF");
-			
-			for(int i = 0; i < probe_list.length;i++){
-				if(dataRequest.containsKey(SettingsActivity.probe_prefix+probe_list[i])){
-					Bundle[] params = dataRequest.get(SettingsActivity.probe_prefix+probe_list[i]);
-					
-					for(Bundle param_set : params){
-						Log.i("Debug",probe_list[i]+" "+param_set.toString());
+			try{
+				SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+		    	FunfConfig config  = FunfConfig.getInstance((prefs));
+		    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
+		    	
+				Resources resources = getResources();
+				String[] probe_list = resources.getStringArray(R.array.probes);						
+				
+				String android_id = Secure.getString(getBaseContext().getContentResolver(),Secure.ANDROID_ID); 
+				Log.i("Debug",android_id);
+				
+				Log.i("Debug","Real-time Upload = "+Boolean.toString(real_time));
+				Log.i("Debug","Upload Period: "+Long.toString(config.getDataUploadPeriod()));
+				Log.i("Debug","Archive Period: "+Long.toString(config.getDataArchivePeriod()));
+				
+				if(config.getDataUploadUrl()!=null)Log.i("Debug",config.getDataUploadUrl());
+				else Log.i("Debug","Upload URL not set");
+				
+				if(dataRequest.size()==0) Log.i("Debug","All probes are OFF");
+				
+				for(int i = 0; i < probe_list.length;i++){
+					if(dataRequest.containsKey(SettingsActivity.probe_prefix+probe_list[i])){
+						Bundle[] params = dataRequest.get(SettingsActivity.probe_prefix+probe_list[i]);
+						
+						for(Bundle param_set : params){
+							Log.i("Debug",probe_list[i]+" "+param_set.toString());
+						}
 					}
 				}
-			}
 	    	
-			updateMainActivity();
+				updateMainActivity();
+			}catch(Exception e){
+				Log.e("ERROR",e.getMessage());
+			}
 		}
 		
 	};
@@ -170,18 +162,20 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
-	    	FunfConfig config  = FunfConfig.getInstance((prefs));	    	
-	    	
-	    	Intent uploadIntent = new Intent(getBaseContext(), MainPipeline.class);
-	    	uploadIntent.setAction(MainPipeline.ACTION_UPLOAD_DATA);
-	    	startService(uploadIntent);
 			
-//			RequestTask req = new RequestTask();
-//			Log.i("Debug",req.execute("http://192.168.1.105:9000/rt","hah").toString());
-			
-			Log.i("Debug","Uploading...");
+			try{
+				// TODO Auto-generated method stub
+				SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+		    	FunfConfig config  = FunfConfig.getInstance((prefs));	    	
+		    	
+		    	Intent uploadIntent = new Intent(getBaseContext(), MainPipeline.class);
+		    	uploadIntent.setAction(MainPipeline.ACTION_UPLOAD_DATA);
+		    	startService(uploadIntent);			
+				
+				Log.i("Debug","Uploading...");
+			}catch(Exception e){
+				Log.e("ERROR",e.getMessage());
+			}
 		}
 		
 	};
@@ -190,9 +184,13 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			Log.i("Debug","RESET");
-			init();
+			try{
+				// TODO Auto-generated method stub
+				Log.i("Debug","RESET");
+				init();
+			}catch(Exception e){
+				Log.e("ERROR",e.getMessage());
+			}
 		}
 		
 	};
@@ -201,23 +199,28 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			Intent mainPipelineService = new Intent(getBaseContext(), MainPipeline.class);
-            stopService(mainPipelineService);
-            
-            Intent locationProbeService = new Intent(getBaseContext(),LocationProbe.class);
-            stopService(locationProbeService);
-            
-            Intent accelProbeService = new Intent(getBaseContext(),AccelerometerSensorProbe.class);
-            stopService(accelProbeService);
-            
-            Intent activityProbeService = new Intent(getBaseContext(),ActivityProbe.class);
-            stopService(activityProbeService);
-            
-            Intent smsProbeService = new Intent(getBaseContext(),SMSProbe.class);
-            stopService(smsProbeService);
- 
-			finish();
+			
+			try{
+				// TODO Auto-generated method stub
+				Intent mainPipelineService = new Intent(getBaseContext(), MainPipeline.class);
+	            stopService(mainPipelineService);
+	            
+	            Intent locationProbeService = new Intent(getBaseContext(),LocationProbe.class);
+	            stopService(locationProbeService);
+	            
+	            Intent accelProbeService = new Intent(getBaseContext(),AccelerometerSensorProbe.class);
+	            stopService(accelProbeService);
+	            
+	            Intent activityProbeService = new Intent(getBaseContext(),ActivityProbe.class);
+	            stopService(activityProbeService);
+	            
+	            Intent smsProbeService = new Intent(getBaseContext(),SMSProbe.class);
+	            stopService(smsProbeService);
+	 
+				finish();
+			}catch(Exception e){
+				Log.e("ERROR",e.getMessage());
+			}
 		}
 		
 	};
@@ -240,53 +243,69 @@ public class MainActivity extends Activity {
 	
 	public void init(){
 		
-		Intent archiveIntent = new Intent(getBaseContext(), MainPipeline.class);
-        archiveIntent.setAction(MainPipeline.ACTION_ENABLE);
-        startService(archiveIntent);
-        
-        SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
-    	FunfConfig config  = FunfConfig.getInstance((prefs));
-    	
-		//config.edit().setDataUploadPeriod(FunfConfig.DEFAULT_DATA_UPLOAD_PERIOD).commit();
-		//config.edit().setDataArchivePeriod(FunfConfig.DEFAULT_DATA_ARCHIVE_PERIOD).commit();
-    	config.edit().setDataUploadPeriod(3600).commit(); //hourly
-		config.edit().setDataArchivePeriod(3600).commit();
-		config.edit().setDataUploadUrl(this.UPLOAD_URL).commit();
-    	
+		try{
+			Intent archiveIntent = new Intent(getBaseContext(), MainPipeline.class);
+	        archiveIntent.setAction(MainPipeline.ACTION_ENABLE);
+	        startService(archiveIntent);
+	        
+	        SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+	    	FunfConfig config  = FunfConfig.getInstance((prefs));
+	    	
+			//config.edit().setDataUploadPeriod(FunfConfig.DEFAULT_DATA_UPLOAD_PERIOD).commit();
+			//config.edit().setDataArchivePeriod(FunfConfig.DEFAULT_DATA_ARCHIVE_PERIOD).commit();
+	    	config.edit().setDataUploadPeriod(this.archive_period).commit(); //hourly
+			config.edit().setDataArchivePeriod(this.archive_period).commit();
+			config.edit().setDataUploadUrl(this.UPLOAD_URL).commit();
+			
+		}catch(Exception e){
+			Log.e("ERROR",e.getMessage());
+		}
 	}
 	
 	public void updateMainActivity(){
 		
-		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
-    	FunfConfig config  = FunfConfig.getInstance((prefs));
-    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
-    	
-		Resources resources = getResources();
-		String[] probe_list = resources.getStringArray(R.array.probes);	
-		
-		TextView archivePeriod = (TextView)findViewById(R.id.archivePeriod);
-		archivePeriod.setText("Archive Period: "+Long.toString(config.getDataArchivePeriod()) + " seconds");
-		
-		TextView uploadPeriod = (TextView)findViewById(R.id.uploadPeriod);
-		uploadPeriod.setText("Upload Period: "+Long.toString(config.getDataUploadPeriod()) + " seconds");
-		
-		TextView probeSettingView = (TextView)findViewById(R.id.probeSettings);
-		
-		String probeSettings = "";
-		
-		if(dataRequest.size()==0) probeSettings = "All Probes Are OFF!";
-		
-		for(int i = 0; i < probe_list.length;i++){
-			if(dataRequest.containsKey(SettingsActivity.probe_prefix+probe_list[i])){
-				Bundle[] params = dataRequest.get(SettingsActivity.probe_prefix+probe_list[i]);
-				
-				for(Bundle param_set : params){
-					probeSettings += probe_list[i].replace("Probe","")+" "+param_set.toString() + "\n";
+		try{
+			SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+	    	FunfConfig config  = FunfConfig.getInstance((prefs));
+	    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
+	    	
+			Resources resources = getResources();
+			String[] probe_list = resources.getStringArray(R.array.probes);	
+			
+			TextView android_ID = (TextView)findViewById(R.id.androidID);
+			android_ID.setText("Android ID: "+Secure.getString(getBaseContext().getContentResolver(),Secure.ANDROID_ID));
+			
+			TextView archivePeriod = (TextView)findViewById(R.id.archivePeriod);
+			archivePeriod.setText("Archive Period: "+Long.toString(config.getDataArchivePeriod()) + " seconds");
+			
+			TextView uploadPeriod = (TextView)findViewById(R.id.uploadPeriod);
+			uploadPeriod.setText("Upload Period: "+Long.toString(config.getDataUploadPeriod()) + " seconds");
+			
+			TextView uploadURL = (TextView)findViewById(R.id.uploadURL);
+			if(config.getDataUploadUrl()!=null) uploadURL.setText("Upload URL: "+this.UPLOAD_URL);
+			else uploadURL.setText("Upload URL: NOT SET");
+			
+			TextView probeSettingView = (TextView)findViewById(R.id.probeSettings);
+			
+			String probeSettings = "";
+			
+			if(dataRequest.size()==0) probeSettings = "All Probes Are OFF!";
+			
+			for(int i = 0; i < probe_list.length;i++){
+				if(dataRequest.containsKey(SettingsActivity.probe_prefix+probe_list[i])){
+					Bundle[] params = dataRequest.get(SettingsActivity.probe_prefix+probe_list[i]);
+					
+					for(Bundle param_set : params){
+						probeSettings += probe_list[i].replace("Probe","")+" "+param_set.toString() + "\n";
+					}
 				}
 			}
-		}
 		
-		probeSettingView.setText(probeSettings);
+			probeSettingView.setText(probeSettings);
+			
+		}catch(Exception e){
+			Log.e("ERROR",e.getMessage());
+		}
 	}
 
 	/* (non-Javadoc)

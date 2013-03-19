@@ -42,31 +42,36 @@ public class SettingsActivity extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		addPreferencesFromResource(R.layout.pref_activity_settings);
+		try{
 		
-		Resources resources = getResources();
-		String[] probe_list = resources.getStringArray(R.array.probes);
-		
-		for(int count = 0; count < probe_list.length; count++){
-
-	        //setup checkbox
-			PreferenceCategory pc = (PreferenceCategory)findPreference("container_"+probe_list[count]);
-			CheckBoxPreference cb = new CheckBoxPreference(this);
-			cb.setKey("checkbox_"+probe_list[count]);			
-			cb.setChecked(MainPipeline.isEnabled(getApplicationContext()));
-	        cb.setOnPreferenceChangeListener(this.probeCheckBoxListener);
-	        cb.setTitle("Enable/Disable");
-	        pc.addPreference(cb);
-
-	        //setup period
-	        NumberPickerPreference period_npp = (NumberPickerPreference)findPreference("period_"+probe_list[count]);
-	        period_npp.setOnPreferenceChangeListener(this.probePeriodListener);
-	        
-	        //setup duration
-	        NumberPickerPreference duration_npp = (NumberPickerPreference)findPreference("duration_"+probe_list[count]);
-	        duration_npp.setOnPreferenceChangeListener(this.probeDurationListener);
-		}
-		
+			addPreferencesFromResource(R.layout.pref_activity_settings);
+			
+			Resources resources = getResources();
+			String[] probe_list = resources.getStringArray(R.array.probes);
+			
+			for(int count = 0; count < probe_list.length; count++){
+	
+		        //setup checkbox
+				PreferenceCategory pc = (PreferenceCategory)findPreference("container_"+probe_list[count]);
+				CheckBoxPreference cb = new CheckBoxPreference(this);
+				cb.setKey("checkbox_"+probe_list[count]);			
+				cb.setChecked(MainPipeline.isEnabled(getApplicationContext()));
+		        cb.setOnPreferenceChangeListener(this.probeCheckBoxListener);
+		        cb.setTitle("Enable/Disable");
+		        pc.addPreference(cb);
+	
+		        //setup period
+		        NumberPickerPreference period_npp = (NumberPickerPreference)findPreference("period_"+probe_list[count]);
+		        period_npp.setOnPreferenceChangeListener(this.probePeriodListener);
+		        
+		        //setup duration
+		        NumberPickerPreference duration_npp = (NumberPickerPreference)findPreference("duration_"+probe_list[count]);
+		        duration_npp.setOnPreferenceChangeListener(this.probeDurationListener);
+			}
+			
+		}catch(Exception e){
+			Log.e("ERROR",e.getMessage());
+		}	
 	}
 	
 	Preference.OnPreferenceChangeListener probeCheckBoxListener = new Preference.OnPreferenceChangeListener() {
@@ -74,13 +79,19 @@ public class SettingsActivity extends PreferenceActivity {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object isChecked) {
 			// TODO Auto-generated method stub
-			//Log.i("Debug",preference.getKey());
-			String arg = preference.getKey().replace("checkbox_", "");
 			
-			if(Boolean.parseBoolean(isChecked.toString())) enableProbe(arg);
-			else disableProbe(arg);
-			
-			return true;
+			try{
+				String arg = preference.getKey().replace("checkbox_", "");
+				
+				if(Boolean.parseBoolean(isChecked.toString())) enableProbe(arg);
+				else disableProbe(arg);
+				
+				return true;
+				
+			}catch(Exception e){
+				Log.e("ERROR",e.getMessage());
+				return true;
+			}
 		} 
 	};
 	
@@ -88,14 +99,21 @@ public class SettingsActivity extends PreferenceActivity {
 
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object period) {
-			// TODO Auto-generated method stub
-			Log.i("Debug",preference.getKey());
-			Log.i("Debug",period.toString());
 			
-			String probe = preference.getKey().replace("period_","");
-			setPeriod(probe,(Integer) period);
-			
-			return true;
+			try{
+				// TODO Auto-generated method stub
+				Log.i("Debug",preference.getKey());
+				Log.i("Debug",period.toString());
+				
+				String probe = preference.getKey().replace("period_","");
+				setPeriod(probe,(Integer) period);
+				
+				return true;
+				
+			}catch(Exception e){
+				Log.e("ERROR",e.getMessage());
+				return true;
+			}
 		} 
 	};
 	
@@ -103,95 +121,118 @@ public class SettingsActivity extends PreferenceActivity {
 
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object duration) {
-			// TODO Auto-generated method stub
-			Log.i("Debug",preference.getKey());
-			Log.i("Debug",duration.toString());
 			
-			String probe = preference.getKey().replace("duration_","");
-			setDuration(probe,(Integer) duration);
-			
-			return true;
+			try{
+				// TODO Auto-generated method stub
+				Log.i("Debug",preference.getKey());
+				Log.i("Debug",duration.toString());
+				
+				String probe = preference.getKey().replace("duration_","");
+				setDuration(probe,(Integer) duration);
+				
+				return true;
+				
+			}catch(Exception e){
+				Log.e("ERROR",e.getMessage());
+				return true;
+			}
 		} 
 	};
 	
 	public void setPeriod(String probe, Integer period){
 		
-		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
-    	FunfConfig config  = FunfConfig.getInstance((prefs));
-    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
-    	
-    	if(dataRequest.containsKey(this.probe_prefix+probe)){
-			Bundle[] params = dataRequest.get(this.probe_prefix+probe);
-			
-			for(Bundle param_set : params){
-				if(param_set.containsKey("PERIOD")){
-					param_set.remove("PERIOD");
-					param_set.putInt("PERIOD", period * 60);
+		try{
+			SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+	    	FunfConfig config  = FunfConfig.getInstance((prefs));
+	    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
+	    	
+	    	if(dataRequest.containsKey(this.probe_prefix+probe)){
+				Bundle[] params = dataRequest.get(this.probe_prefix+probe);
+				
+				for(Bundle param_set : params){
+					if(param_set.containsKey("PERIOD")){
+						param_set.remove("PERIOD");
+						param_set.putInt("PERIOD", period * 60);
+					}
 				}
 			}
+	    	
+	    	config.edit().setDataRequests(dataRequest).commit();
+		}catch(Exception e){
+			Log.e("ERROR",e.getMessage());
 		}
-    	
-    	config.edit().setDataRequests(dataRequest).commit();
 	}
 	
 	public void setDuration(String probe, Integer duration){
 		
-		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
-    	FunfConfig config  = FunfConfig.getInstance((prefs));
-    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
-    	
-    	if(dataRequest.containsKey(this.probe_prefix+probe)){
-			Bundle[] params = dataRequest.get(this.probe_prefix+probe);
-			
-			for(Bundle param_set : params){
-				if(param_set.containsKey("DURATION")){
-					param_set.remove("DURATION");
-					param_set.putInt("DURATION", duration);
+		try{
+			SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+	    	FunfConfig config  = FunfConfig.getInstance((prefs));
+	    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
+	    	
+	    	if(dataRequest.containsKey(this.probe_prefix+probe)){
+				Bundle[] params = dataRequest.get(this.probe_prefix+probe);
+				
+				for(Bundle param_set : params){
+					if(param_set.containsKey("DURATION")){
+						param_set.remove("DURATION");
+						param_set.putInt("DURATION", duration);
+					}
 				}
 			}
+	    	
+	    	config.edit().setDataRequests(dataRequest).commit();
+	    	
+		}catch(Exception e){
+			Log.e("ERROR",e.getMessage());
 		}
-    	
-    	config.edit().setDataRequests(dataRequest).commit();
 	}
 	
 	public void enableProbe(String probe){
-		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
-    	FunfConfig config  = FunfConfig.getInstance((prefs));
-    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
-    	
-    	Resources resources = getResources();
-    	String[] probes = resources.getStringArray(R.array.probes);
-    	int[] default_periods = resources.getIntArray(R.array.default_periods);
-    	int[] default_durations = resources.getIntArray(R.array.default_durations);
-
-    	//Log.i("Debug",Arrays.asList(probes).toString());
-    	//Log.i("Debug",Integer.valueOf(Arrays.asList(probes).indexOf(probe)).toString());
-    
-    	List<Bundle> tempList = new ArrayList<Bundle>();
-
-    	Bundle params = new Bundle();
-    	params.putInt("PERIOD", default_periods[Arrays.asList(probes).indexOf(probe)]); //default value
-    	if(default_durations[Arrays.asList(probes).indexOf(probe)]>0)
-    		params.putInt("DURATION", default_durations[Arrays.asList(probes).indexOf(probe)]);
-    	//Log.i("Debug",period.toString());
-    	
-    	tempList.add(params);
-    	
-    	Bundle arrBundle[] = tempList.toArray(new Bundle[tempList.size()]);
-    	
-    	dataRequest.put(this.probe_prefix+probe, arrBundle);
-
-		config.edit().setDataRequests(dataRequest).commit();
 		
+		try{
+			SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+	    	FunfConfig config  = FunfConfig.getInstance((prefs));
+	    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
+	    	
+	    	Resources resources = getResources();
+	    	String[] probes = resources.getStringArray(R.array.probes);
+	    	int[] default_periods = resources.getIntArray(R.array.default_periods);
+	    	int[] default_durations = resources.getIntArray(R.array.default_durations);
+	    
+	    	List<Bundle> tempList = new ArrayList<Bundle>();
+	
+	    	Bundle params = new Bundle();
+	    	params.putInt("PERIOD", default_periods[Arrays.asList(probes).indexOf(probe)]); //default value
+	    	if(default_durations[Arrays.asList(probes).indexOf(probe)]>0)
+	    		params.putInt("DURATION", default_durations[Arrays.asList(probes).indexOf(probe)]);
+	    	//Log.i("Debug",period.toString());
+	    	
+	    	tempList.add(params);
+	    	
+	    	Bundle arrBundle[] = tempList.toArray(new Bundle[tempList.size()]);
+	    	
+	    	dataRequest.put(this.probe_prefix+probe, arrBundle);
+	
+			config.edit().setDataRequests(dataRequest).commit();
+			
+		}catch(Exception e){
+			Log.e("ERROR",e.getMessage());
+		}
 	}
 	
 	public void disableProbe(String probe){
-		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
-    	FunfConfig config  = FunfConfig.getInstance((prefs));
-    	Map<String, Bundle[]> dataRequest = config.getDataRequests();   	
-    	
-    	dataRequest.remove(this.probe_prefix+probe);
-		config.edit().setDataRequests(dataRequest).commit();
+		
+		try{
+			SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+	    	FunfConfig config  = FunfConfig.getInstance((prefs));
+	    	Map<String, Bundle[]> dataRequest = config.getDataRequests();   	
+	    	
+	    	dataRequest.remove(this.probe_prefix+probe);
+			config.edit().setDataRequests(dataRequest).commit();
+		}catch(Exception e){
+			Log.e("ERROR",e.getMessage());
+		}
 	}
 	
 	@Override
