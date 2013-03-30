@@ -23,7 +23,7 @@
 
 <resources>
 
-    <string name="app_name">Wifi Scanner</string>
+    <string name="app_name">Funf to WoTKit</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_settings">SettingsActivity</string>

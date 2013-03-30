@@ -16,7 +16,7 @@
  */
 package com.michaelnovakjr.numberpicker;
 
-import edu.mit.media.funf.wifiscanner.R;
+import edu.mit.media.funf.funftowotk.R;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;

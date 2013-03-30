@@ -15,7 +15,7 @@
  */
 package com.michaelnovakjr.numberpicker;
 
-import edu.mit.media.funf.wifiscanner.R;
+import edu.mit.media.funf.funftowotk.R;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;

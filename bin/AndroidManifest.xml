@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.mit.media.funf.wifiscanner"
+    package="edu.mit.media.funf.funftowotk"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -20,12 +20,12 @@
         <service android:name="edu.mit.media.funf.probe.builtin.SMSProbe" />
         
         <!-- Framework services -->
-        <service android:name="edu.mit.media.funf.wifiscanner.MainPipeline" />
+        <service android:name="edu.mit.media.funf.funftowotk.MainPipeline" />
         <service android:name="edu.mit.media.funf.storage.NameValueDatabaseService" />
         <service android:name="edu.mit.media.funf.storage.HttpUploadService"/>
 
         <receiver
-            android:name="edu.mit.media.funf.wifiscanner.LauncherReceiver"
+            android:name="edu.mit.media.funf.funftowotk.LauncherReceiver"
             android:enabled="true" >
             <intent-filter>
                 <action android:name="android.intent.action.BATTERY_CHANGED" />
@@ -37,7 +37,7 @@
         </receiver>
 
         <!-- created by Cat at 2013-01-15 15:37:58 -->
-        <activity android:name="edu.mit.media.funf.wifiscanner.MainActivity" >
+        <activity android:name="edu.mit.media.funf.funftowotk.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,7 +45,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="edu.mit.media.funf.wifiscanner.SettingsActivity"
+            android:name="edu.mit.media.funf.funftowotk.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
     </application>

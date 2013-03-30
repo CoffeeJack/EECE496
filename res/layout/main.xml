@@ -8,17 +8,30 @@ android:layout_height="fill_parent">
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"/>
     
-    <LinearLayout android:layout_width="fill_parent" 
-    android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
         <CheckBox
             android:id="@+id/enableRealTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enable/Disable Real-time Upload" />
+            android:text="Enable Real-time Upload" />
         
      </LinearLayout>
+     
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="25dp"
+        android:orientation="horizontal" >
+        
+        <TextView android:id="@+id/serverStatus" 
+	    android:layout_width="wrap_content" 
+	    android:layout_height="wrap_content"
+	    />
+        
+    </LinearLayout>
      
     	<!-- 
     	<Button android:id="@+id/archiveButton"
@@ -42,7 +55,7 @@ android:layout_height="fill_parent">
             android:id="@+id/getConfigButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Get Config" />
+            android:text="Configure Probes" />
         
         <!-- 
         <Button
@@ -68,8 +81,8 @@ android:layout_height="fill_parent">
         android:id="@+id/exitButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Exit" />
-
+        android:text="Turn Off" /> 
+        
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="25dp"

@@ -16,6 +16,6 @@ EECE496
 <br>Edit step 3 of above
 
 <br><H3>Changing Archive/Upload settings</H3>
-<br>1)Open MainActivity>>src>>edu.mit.media.funf.wifiscanner>>MainActivity
+<br>1)Open MainActivity>>src>>edu.mit.media.funf.funftowotk>>MainActivity
 <br>2)Find init(), change the settings.
 
