@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,6 +32,8 @@ import edu.mit.media.funf.probe.builtin.LocationProbe;
 import edu.mit.media.funf.probe.builtin.SMSProbe;
 import edu.mit.media.funf.probe.builtin.WifiProbe;
 import edu.mit.media.funf.funftowotk.R;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.provider.Settings.Secure;
 
 /**
@@ -100,9 +104,9 @@ public class MainActivity extends Activity {
         
 //		Button listProbeButton = (Button)findViewById(R.id.listProbeButton);
 //		listProbeButton.setOnClickListener(listProbes);
-//		
-//		Button changeSettingButton = (Button)findViewById(R.id.changeSettingButton);
-//		changeSettingButton.setOnClickListener(changeSetting);
+		
+		Button changeSettingButton = (Button)findViewById(R.id.changeSettingButton);
+		changeSettingButton.setOnClickListener(changeSetting);
 		
 //		Button resetButton = (Button)findViewById(R.id.resetButton);
 //		resetButton.setOnClickListener(reset);
@@ -217,23 +221,13 @@ public class MainActivity extends Activity {
 		public void onClick(View v) {
 			
 			try{
-				// TODO Auto-generated method stub
-				Intent mainPipelineService = new Intent(getBaseContext(), MainPipeline.class);
-	            stopService(mainPipelineService);
-	            
-	            Intent locationProbeService = new Intent(getBaseContext(),LocationProbe.class);
-	            stopService(locationProbeService);
-	            
-	            Intent accelProbeService = new Intent(getBaseContext(),AccelerometerSensorProbe.class);
-	            stopService(accelProbeService);
-	            
-	            Intent activityProbeService = new Intent(getBaseContext(),ActivityProbe.class);
-	            stopService(activityProbeService);
-	            
-	            Intent smsProbeService = new Intent(getBaseContext(),SMSProbe.class);
-	            stopService(smsProbeService);
-	 
+				// TODO Auto-generated method stub				
+				
+				turnOffAllProbes();
+				turnOffPipeline();
+				while(!checkAllProbesAreOff());
 				finish();
+				
 			}catch(Exception e){
 				Log.e("ERROR",e.getMessage());
 			}
@@ -338,6 +332,54 @@ public class MainActivity extends Activity {
 		
 	}
 	
+	public void turnOffAllProbes(){
+		try{			
+			Resources resources = getResources();
+			String[] probe_list = resources.getStringArray(R.array.probes);	
+			
+			for(int i = 0; i < probe_list.length;i++){
+				turnOffProbe(probe_list[i]);
+			}
+			
+		}catch(Exception e){
+			Log.e("ERROR",e.getMessage());
+		}	
+	}
+	
+	public void turnOffProbe(String probe){
+		
+		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+    	FunfConfig config  = FunfConfig.getInstance((prefs));
+    	Map<String, Bundle[]> dataRequest = config.getDataRequests();   	
+    	
+    	dataRequest.remove(SettingsActivity.probe_prefix+probe);
+		config.edit().setDataRequests(dataRequest).commit();
+		
+	}
+	
+	public Boolean checkAllProbesAreOff(){
+		
+		Resources resources = getResources();
+		String[] probe_list = resources.getStringArray(R.array.probes);
+		
+		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+    	FunfConfig config  = FunfConfig.getInstance((prefs));
+    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
+		
+		for(int i = 0; i < probe_list.length;i++){
+			if(dataRequest.containsKey(SettingsActivity.probe_prefix+probe_list[i])){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public void turnOffPipeline(){
+		
+		stopService(new Intent(this, MainPipeline.class));
+	}
+	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {	    
 		
 		Log.i("WifiScanner", "SharedPref change: " + key);
@@ -354,6 +396,27 @@ public class MainActivity extends Activity {
 
 	}
 	
+	private void saveState(){
+		SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+	    SharedPreferences.Editor editor = sharedPreferences.edit();
+	    
+	    CheckBox realtime_enable = (CheckBox)findViewById(R.id.enableRealTime); 
+	    Boolean state = realtime_enable.isChecked();
+	    //Log.i("Debug","RT "+state.toString());
+	    editor.putBoolean("RT_enabled",state);
+	    editor.commit();
+	    
+	}
+	
+	private void loadState(){
+		SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+		Boolean state = sharedPreferences.getBoolean("RT_enabled", false);
+		//Log.i("Debug","RT "+state.toString());
+		CheckBox realtime_enable = (CheckBox)findViewById(R.id.enableRealTime); 
+		realtime_enable.setChecked(state);
+		this.real_time = state;
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onStart()
@@ -364,6 +427,7 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		
 		Log.i("Main","Start");
+		loadState();
 	}
 
 	/* (non-Javadoc)
@@ -377,6 +441,7 @@ public class MainActivity extends Activity {
 		Log.i("Main","Resume");
 		updateMainActivity();
 		updateScanCount();
+		loadState();
 
 	}
 
@@ -389,6 +454,7 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		
 		Log.i("Main","Pause");
+		saveState();
 
 	}
 
@@ -401,17 +467,29 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		
 		Log.i("Main","Stop");
-
+		saveState();
+		
 	}
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onDestroy()
 	 */
+	@SuppressLint("NewApi")
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		// TODO Auto-generated method stub
 		Log.i("Main","Destroy");
+		
+		//shutDown();
+		
+		//kill background process
+//		ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+//		activityManager.killBackgroundProcesses("edu.mit.media.funf.funftowotk");
+		
+		//kill self
+//		android.os.Process.killProcess(android.os.Process.myPid());
+		//shutDown();
 
 	}
 	

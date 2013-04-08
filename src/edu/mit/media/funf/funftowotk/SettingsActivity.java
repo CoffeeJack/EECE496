@@ -236,6 +236,23 @@ public class SettingsActivity extends PreferenceActivity {
 		}
 	}
 	
+	public void checkProbesStatus(){
+		
+		Resources resources = getResources();
+		String[] probe_list = resources.getStringArray(R.array.probes);
+		
+		SharedPreferences prefs = getApplicationContext().getSharedPreferences(MainPipeline.MAIN_CONFIG, MODE_PRIVATE);
+    	FunfConfig config  = FunfConfig.getInstance((prefs));
+    	Map<String, Bundle[]> dataRequest = config.getDataRequests();
+		
+		for(int i = 0; i < probe_list.length;i++){
+			
+			CheckBoxPreference cb = (CheckBoxPreference)findPreference("checkbox_"+probe_list[i]);
+			cb.setChecked(dataRequest.containsKey(SettingsActivity.probe_prefix+probe_list[i]));
+
+		}
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -267,20 +284,6 @@ public class SettingsActivity extends PreferenceActivity {
 		super.onStop();
 		//Log.i("Debug","stop");
 		
-//		SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-//	    SharedPreferences.Editor editor = sharedPreferences.edit();
-//		
-//		Resources resources = getResources();
-//		String[] probe_list = resources.getStringArray(R.array.probes);
-//		
-//		for(int count = 0; count < probe_list.length; count++){
-//			CheckBox cb = (CheckBox)findViewById(count);
-//			//String s = Boolean.toString(cb.isChecked());
-//			//Log.i("Debug",s);
-//			
-//		    editor.putBoolean(probe_list[count], cb.isChecked());
-//		    editor.commit();
-//		}
 	}
 	
 	@Override
@@ -288,18 +291,8 @@ public class SettingsActivity extends PreferenceActivity {
 		super.onStart();
 		//Log.i("Debug","start");
 		
-//		SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-//		
-//		Resources resources = getResources();
-//		String[] probe_list = resources.getStringArray(R.array.probes);
-//		
-//		for(int count = 0; count < probe_list.length; count++){
-//			CheckBox cb = (CheckBox)findViewById(count);
-//			//String s = Boolean.toString(sharedPreferences.getBoolean(probe_list[count], false));
-//			//Log.i("Debug",s);
-//			
-//			cb.setChecked(sharedPreferences.getBoolean(probe_list[count], false));
-//		}
+		checkProbesStatus();
+		
 	}
 
 }

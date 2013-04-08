@@ -103,7 +103,8 @@
     <!-- DatabaseService, Archive service (unique ids) -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    
+    <!-- Kill Background Process -->
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
 
 </manifest><!--
  * Funf: Open Sensing Framework
