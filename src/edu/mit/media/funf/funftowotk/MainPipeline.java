@@ -94,12 +94,44 @@ public class MainPipeline extends ConfiguredPipeline {
 			data.putString("WoTK_ID","coffeejack"); //add WotKit info here
 			String dataJson = getBundleSerializer().serialize(data);
 			
-			RequestTask rq = new RequestTask();	
-			rq.execute(MainActivity.REAL_TIME_UPLOAD_URL,"POST","application/json",dataJson);
+			if(checkValidData(data)){
+				
+				Log.i("DataLog",dataJson);
+				
+				RequestTask rq = new RequestTask();	
+				rq.execute(MainActivity.REAL_TIME_UPLOAD_URL,"POST","application/json",dataJson);
+			}else{
+				Log.i("DataLog","Invalid Data, not sending");
+			}
 			
 		}
 				
 		incrementCount();
+	}
+	
+	public Boolean checkValidData(Bundle data){
+		
+		String probe = data.getString("PROBE").replace(SettingsActivity.probe_prefix, "");
+		
+		if(probe.equals("CallLogProbe")){
+
+			ArrayList calls = (ArrayList)data.get("CALLS");
+			
+			if(calls.isEmpty()){
+				//Log.i("DataLog",calls.toString());
+				return false;
+			}
+		}else if(probe.equals("SMSProbe")){
+			
+			ArrayList messages = (ArrayList)data.get("MESSAGES");
+			
+			if(messages.isEmpty()){
+				//Log.i("DataLog",messages.toString());
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	@Override

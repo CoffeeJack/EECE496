@@ -105,8 +105,8 @@ public class MainActivity extends Activity {
 //		Button listProbeButton = (Button)findViewById(R.id.listProbeButton);
 //		listProbeButton.setOnClickListener(listProbes);
 		
-		Button changeSettingButton = (Button)findViewById(R.id.changeSettingButton);
-		changeSettingButton.setOnClickListener(changeSetting);
+//		Button changeSettingButton = (Button)findViewById(R.id.changeSettingButton);
+//		changeSettingButton.setOnClickListener(changeSetting);
 		
 //		Button resetButton = (Button)findViewById(R.id.resetButton);
 //		resetButton.setOnClickListener(reset);
