@@ -60,6 +60,7 @@ public class MainActivity extends Activity {
 	static final String CHECK_STATUS_URL = ROOT_URL+"status";
 	
 	static final Integer archive_period = 3600;
+	static final Integer upload_period = 3600;
 	
 	public static String serverStatus = "SENSING...";
 	
@@ -249,7 +250,7 @@ public class MainActivity extends Activity {
 	    	
 			//config.edit().setDataUploadPeriod(FunfConfig.DEFAULT_DATA_UPLOAD_PERIOD).commit();
 			//config.edit().setDataArchivePeriod(FunfConfig.DEFAULT_DATA_ARCHIVE_PERIOD).commit();
-	    	config.edit().setDataUploadPeriod(this.archive_period).commit(); //hourly
+	    	config.edit().setDataUploadPeriod(this.upload_period).commit(); //hourly
 			config.edit().setDataArchivePeriod(this.archive_period).commit();
 			config.edit().setDataUploadUrl(this.UPLOAD_URL).commit();
 			
@@ -331,6 +332,8 @@ public class MainActivity extends Activity {
 		}
 		
 	}
+	
+	/***********CLEAN UP**************/
 	
 	public void turnOffAllProbes(){
 		try{			

@@ -1,21 +1,38 @@
-EECE496
-=======
+EECE496 - Android Application
+=============================
 
-<br><H3>funf framework data collect</H3>
-<p>
-<br><H3>When adding a new probe, remember the following:</H3>
-<br>1) Add new probe to MainActivity>>res>>AndroidManifest.xml
-<br>2) Add new probe to MainActivity>>res>>values>>strings.xml
-<br>3) Add new probe default settings to MainActivity>>res>>values>>defaults.xml (IN EXACT ORDER as strings.xml)
-<br>4) Add new Preference to MainActivity>>res>>layout>>pref_activity_settings.xml
-<p>
-<br>If you've done all 4 steps above, you should see the new probe when you open up CONFIG on the Android app.
-<br>Check the checkbox to enable/disable.
+Introduction
+------------
+This is an Android application written for
 
-<br><H3>Editting Default Sampling Periods/Durations</H3>
-<br>Edit step 3 of above
+* Android APK 7+
+* framework FunF v0.3. 
+ 
+For in depth documentation as to how FunF works please visit http://code.google.com/p/funf-open-sensing-framework/wiki/GettingStarted
 
-<br><H3>Changing Archive/Upload settings</H3>
-<br>1)Open MainActivity>>src>>edu.mit.media.funf.funftowotk>>MainActivity
-<br>2)Find init(), change the settings.
+Managing Probes
+--------------------
+###Adding New Probes
+1. Add new probe to MainActivity>>res>>AndroidManifest.xml
+2. Add new probe to MainActivity>>res>>values>>strings.xml
+3. Add new probe default settings to MainActivity>>res>>values>>defaults.xml (IN EXACT ORDER as strings.xml)
+4. Add new Preference to MainActivity>>res>>layout>>pref_activity_settings.xml
 
+If you've done all 4 steps above, you should see the new probe when you open up CONFIG on the Android app.
+Check the checkbox to enable/disable.
+
+###Editting Default Sampling Periods/Durations
+1. Edit step 3 of above
+
+###Changing Archive/Upload settings
+1.Open MainActivity>>src>>edu.mit.media.funf.funftowotk>>MainActivity
+2.Find init(), change the settings.
+
+General Configurations
+----------------------
+General configurations can be found at the top of MainActivity.java.  There you can edit:
+
+* Which server to upload to by changing ROOT_URL
+* How often data is archived by changing archive_period
+* How often data is uploaded in batches by changing upload_period
+* How often the app polls the server to see if it's alive by changing server_check_interval
